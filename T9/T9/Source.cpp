@@ -1,24 +1,39 @@
-
 #include "Trie.h"
-#include <allegro5\allegro.h> // for formatting console interface
+#include <list>
 
+// TODO: IMPLEMENT SEARCHING FOR ALL WORDS - NOT ONLY FOR THE FIRST ONE
+// SOLUTION: LIST
+
+class word
+{
+
+private:
+	string value;
+
+public:
+	word()
+	{
+		value = "";
+	}
+	word(const string & val)
+	{
+		value = val;
+	}
+	~word() {};
+};
+
+class Text : public word
+{
+	protected:
+		list<word> listOfWords;
+	public: 
+		Text() {};
+		~Text() {};
+		void insertWordIntoText(const word & w);
+};
 
 int main()
 {
-	al_init();
-	al_install_keyboard();
-	al_install_mouse();
-	ALLEGRO_DISPLAY *window = al_create_display(800, 800);
-	al_set_window_title(window, "Email creator");
-	al_clear_to_color(al_map_rgb(255, 255, 255));
-	al_flip_display();
-
-
-
-	if (!window)
-	{
-		throw exception();
-	}
 
 	Trie T("");
 
@@ -40,24 +55,56 @@ int main()
 	}
 
 	string word = "";
+	string text  = "";
 	char c;
 	while (1)
 	{
 		c = _getch();
-		word += c;
-		cout << word << endl;
+			if (c == ' ')
+			{
+				if (text != "")
+				{
+					text += " ";
+				}
+				text += word;
+				word = "";
 
-		vector<string> r = T.load_all_words(word);
-		for (vector<string>::iterator it = r.begin(); it != r.end(); it++) {
-			cout << *it << endl;
-		}
-		if (word == "exit")
-		{
-			break;
-		}
+				system("cls");
+
+				cout << text << endl;
+
+				continue;
+			}
+			else if (c == 8)
+			{
+				if (word.length() > 0)
+				{
+					word.pop_back();
+				}
+				else {
+					word = "";
+				}
+			} else {
+				word += c;
+			}
+			system("cls");
+			cout << text << " " << word;
+
+			vector<string> r = T.load_all_words(word);
+			for (vector<string>::iterator it = r.begin(); it != r.end(); it++) {
+				cout.width(60);
+				cout << right << *it << endl;
+			}
+			if (c == 27)
+			{
+				cout << endl;
+				break;
+			}
+		
 	}
+		
+		
 
-	al_destroy_display(window);
 
 
 	system("pause");
