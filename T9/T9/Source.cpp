@@ -19,6 +19,10 @@ public:
 	{
 		value = val;
 	}
+	const string & getWord()
+	{
+		return value;
+	}
 	~word() {};
 };
 
@@ -51,14 +55,19 @@ int main()
 
 	vector<string> r = T.load_all_words("F");
 	for (vector<string>::iterator it = r.begin(); it != r.end(); it++) {
-		cout << *it << endl;
+		cout << *it << "\n";
 	}
+
+	
 
 	string word = "";
 	string text  = "";
+	string str = "";
+	
 	char c;
 	while (1)
 	{
+		str = "start \"Help\" cmd /C \"echo off &";
 		c = _getch();
 			if (c == ' ')
 			{
@@ -71,7 +80,7 @@ int main()
 
 				system("cls");
 
-				cout << text << endl;
+				cout << text << "\n";
 
 				continue;
 			}
@@ -92,19 +101,28 @@ int main()
 
 			vector<string> r = T.load_all_words(word);
 			for (vector<string>::iterator it = r.begin(); it != r.end(); it++) {
+				
 				cout.width(60);
 				cout << right << *it << endl;
+				str += " echo ";
+				str += *it;
+				str += " & ";
+
 			}
+			str += " pause \"";
+			const char * c_s = str.c_str();
+			// option for showing characters on separate cmds
+			//system(c_s);
+			//system("start \"Help\" cmd /C \"echo off & echo Help text 1 & echo Help text 2 & echo Help text 3 & pause\"");
 			if (c == 27)
 			{
-				cout << endl;
 				break;
 			}
 		
 	}
 		
 		
-
+	//system("start \"Help\" cmd /C \"echo off & echo Help text 1 & echo Help text 2 & echo Help text 3 & pause\"");
 
 
 	system("pause");
