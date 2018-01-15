@@ -54,10 +54,14 @@ public:
 class Message
 {
 	protected:
+		Trie Vocabulary; // public because the vocabulary is commonly used
 		string recipient_info;
 		string message;
 	public: 
-		Message() : recipient_info(""), message("") {};
+
+		
+
+		Message() : Vocabulary(""), recipient_info(""), message("") {};
 		~Message() {};
 		
 		virtual bool is_valid_recepient_info(const string &s);
@@ -65,7 +69,28 @@ class Message
 		virtual void assign_recipient(const string &s);
 		virtual void assign_message_content(const string &s);
 
+		virtual void load_contacts(const string &s);
+		void load_vocabulary(ifstream & words);
+		vector<string> load_all_words_from_voc(const string & s);
 };
+
+void Message::load_vocabulary(ifstream & words_file)
+{
+	string s;
+
+	int n = 0;
+	transform(s.begin(), s.end(), s.begin(), ::tolower);
+	while (getline(words_file, s))
+	{
+		n++;
+		Vocabulary.insert(s);
+		transform(s.begin(), s.end(), s.begin(), ::tolower);
+	}
+}
+vector<string> Message::load_all_words_from_voc(const string & s)
+{
+	return Vocabulary.load_all_words(s);
+}
 
 // for the email validate email format
 // no limit for the number of signs
@@ -91,7 +116,6 @@ class Email : public Message
 
 		void assign_recipient(const string &s);
 		void assign_message_content(const string &s);
-
 
 		// helper functions created for the purpose of validating email address
 		bool is_character(const char & c) {
@@ -200,10 +224,12 @@ int main()
 {
 
 	Trie Emails("");
-	Trie T("");
+	Trie Words("");
+	Trie Phones("");
 
 	ifstream file("words.txt");
 	ifstream emails("emails.txt");
+	ifstream phones("phones.txt");
 	string s;
 
 	int n = 0;
@@ -211,7 +237,7 @@ int main()
 	while (getline(file, s))
 	{
 		n++;
-		T.insert(s);
+		Words.insert(s);
 		transform(s.begin(), s.end(), s.begin(), ::tolower);
 	}
 
@@ -224,7 +250,20 @@ int main()
 		transform(s.begin(), s.end(), s.begin(), ::tolower);
 	}
 
-	vector<string> r = Emails.load_all_words("b");
+	n = 0;
+	transform(s.begin(), s.end(), s.begin(), ::tolower);
+	while (getline(phones, s))
+	{
+		n++;
+		Phones.insert(s);
+		transform(s.begin(), s.end(), s.begin(), ::tolower);
+	}
+
+
+	Message M;
+	M.load_vocabulary(file);
+
+	vector<string> r = M.load_all_words_from_voc("f");
 	for (vector<string>::iterator it = r.begin(); it != r.end(); it++) {
 		cout << *it << "\n";
 	}
@@ -270,7 +309,7 @@ int main()
 			system("cls");
 			cout << text << " " << word;
 
-			vector<string> r = T.load_all_words(word);
+			vector<string> r = Words.load_all_words(word);
 			for (vector<string>::iterator it = r.begin(); it != r.end(); it++) {
 				
 				cout.width(60);
