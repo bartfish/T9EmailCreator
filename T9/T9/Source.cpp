@@ -2,6 +2,8 @@
 #include "Messages.h"
 #include <list>
 #include <stdexcept>
+#include "curses.h"
+
 
 // TODO: IMPLEMENT SEARCHING FOR ALL WORDS - NOT ONLY FOR THE FIRST ONE
 // SOLUTION: LIST
@@ -13,6 +15,7 @@
 int main()
 {
 
+	initscr();
 	Trie Emails("");
 	Trie Words("");
 	Trie Phones("");
@@ -50,6 +53,7 @@ int main()
 	}
 
 	// ERROR EXTERNAL SYMBOL
+
 	Email M;
 	M.load_vocabulary("emails.txt");
 	M.assign_message_content("message");
