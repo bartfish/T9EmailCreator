@@ -83,6 +83,13 @@ void Email::assign_message_content(const string &s)
 }
 
 
+void Email::inputting_contact_info()
+{
+
+}
+
+
+
 
 void SMS::assign_recipient(const string &s)
 {

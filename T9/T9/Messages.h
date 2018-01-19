@@ -20,6 +20,8 @@ public:
 	virtual void assign_message_content(const string &s) {}
 
 	virtual void load_contacts(const string &s) {}
+	virtual void inputting_contact_info() {}
+
 
 
 	void load_vocabulary(const string & filename);
@@ -59,6 +61,8 @@ public:
 	bool is_number(const char & c) {
 		return (c >= '0' && c <= '9');
 	}
+	void inputting_contact_info() {}
+
 };
 
 
