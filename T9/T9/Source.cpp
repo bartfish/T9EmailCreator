@@ -2,8 +2,7 @@
 #include "Messages.h"
 #include <list>
 #include <stdexcept>
-#include "curses.h"
-
+#include "include\curses.h"
 
 // TODO: IMPLEMENT SEARCHING FOR ALL WORDS - NOT ONLY FOR THE FIRST ONE
 // SOLUTION: LIST
@@ -69,8 +68,8 @@ int main()
 	draw_borders(message_window); // simulate the game loop 
 	draw_borders(vocabulary_window); // simulate the game loop 
 	draw_borders(fifth); // simulate the game loop 
-	while (1)
-	{ 
+	//while (1)
+	//{ 
 		// draw to our windows 
 		mvwprintw(contact_window, 1, 1, "contact_window");
 		mvwprintw(topic_window, 1, 1, "topic_window"); // refresh each window 
@@ -82,8 +81,8 @@ int main()
 		wrefresh(message_window);
 		wrefresh(vocabulary_window);
 		wrefresh(fifth);
-
-	} // clean up B
+	//	break;
+	//} // clean up B
 
 	//wsleep(5); // clean up 
 
@@ -136,10 +135,18 @@ int main()
 
 	vector <string> EmailVoc = M.load_all_words_from_voc("b");
 
+	string emails_str = "";
 	vector<string> r = EmailVoc;// .load_all_words("f");
+	int left = 0, top = 2;
 	for (vector<string>::iterator it = r.begin(); it != r.end(); it++) {
-		cout << *it << "\n";
+		//cout << *it << "\n";
+		emails_str += *it + ", ";
+
+		// show word in the next line
+		//top++;
 	}
+	mvwprintw(vocabulary_window, left, top, emails_str.c_str());
+	wrefresh(vocabulary_window);
 
 
  	string word = "";
@@ -149,7 +156,7 @@ int main()
 	char c;
 	while (1)
 	{
-		str = "start \"Help\" cmd /C \"echo off &";
+		//str = "start \"Help\" cmd /C \"echo off &";
 		c = _getch();
 			if (c == ' ')
 			{
@@ -160,7 +167,7 @@ int main()
 				text += word;
 				word = "";
 
-				system("cls");
+				//system("cls");
 
 				cout << text << "\n";
 
@@ -178,7 +185,7 @@ int main()
 			} else {
 				word += c;
 			}
-			system("cls");
+			//system("cls");
 			cout << text << " " << word;
 
 			vector<string> r = Words.load_all_words(word);
@@ -186,15 +193,15 @@ int main()
 				
 				cout.width(60);
 				cout << right << *it << endl;
-				str += " echo ";
+				//str += " echo ";
 				str += *it;
-				str += " & ";
+			//	str += " & ";
 
 			}
-			str += " pause \"";
-			const char * c_s = str.c_str();
+			//str += " pause \"";
+			//const char * c_s = str.c_str();
 			// option for showing characters on separate cmds
-			system(c_s);
+			//system(c_s);
 			//system("start \"Help\" cmd /C \"echo off & echo Help text 1 & echo Help text 2 & echo Help text 3 & pause\"");
 			if (c == 27)
 			{
