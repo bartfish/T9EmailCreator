@@ -21,6 +21,10 @@ public:
 
 	virtual void load_contacts(const string &s) {}
 	virtual void inputting_contact_info() {}
+	virtual vector<string> load_all_words_from_contacts(const string & s) 
+	{
+		return Vocabulary.load_all_words("a");
+	}
 
 
 
@@ -34,7 +38,7 @@ public:
 class Email : public Message
 {
 private:
-	//Trie Emails;
+	Trie Emails;
 	string topic;
 	unsigned int priority_type;
 	enum Priority : unsigned int
@@ -46,7 +50,7 @@ private:
 
 
 public:
-	Email() : topic("Not set"), priority_type(NORMAL) {}
+	Email() : Emails(""), topic("Not set"), priority_type(NORMAL) {}
 	~Email() {}
 
 	bool is_valid_recepient_info(const string &s);
@@ -61,7 +65,11 @@ public:
 	bool is_number(const char & c) {
 		return (c >= '0' && c <= '9');
 	}
-	void inputting_contact_info() {}
+
+	//template <T> MessageType;
+	void inputting_contact_info() {};
+	void load_contacts();
+	vector<string> load_all_words_from_contacts(const string & s);
 
 };
 
@@ -76,7 +84,7 @@ public:
 class SMS : public Message
 {
 private:
-	//Trie Phones;
+	Trie Contacts;
 	enum SMS_TYPE : unsigned int
 	{
 		SMS_TEXT = 1,
@@ -85,13 +93,14 @@ private:
 
 
 public:
-	SMS() {}
+	SMS() : Contacts("") {}
 	~SMS() {}
 
 	bool is_valid_recepient_info(const string &s) { return true;  }
 
 	void assign_recipient(const string &s);
 	void assign_message_content(const string &s);
+	vector<string> load_all_words_from_contacts(const string & s);
 };
 
 

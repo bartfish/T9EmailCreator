@@ -81,12 +81,25 @@ void Email::assign_message_content(const string &s)
 {
 	message = s;
 }
-
-
-void Email::inputting_contact_info()
+void Email::load_contacts()
 {
+	string s;
+	ifstream words_file("emails.txt");
 
+	int n = 0;
+	transform(s.begin(), s.end(), s.begin(), ::tolower);
+	while (getline(words_file, s))
+	{
+		n++;
+		Emails.insert(s);
+		transform(s.begin(), s.end(), s.begin(), ::tolower);
+	}
 }
+vector<string> Email::load_all_words_from_contacts(const string & s)
+{
+	return Emails.load_all_words(s);
+}
+
 
 
 
@@ -99,4 +112,8 @@ void SMS::assign_recipient(const string &s)
 void SMS::assign_message_content(const string &s)
 {
 	message = s;
+}
+vector<string> SMS::load_all_words_from_contacts(const string & s)
+{
+	return Contacts.load_all_words(s);
 }

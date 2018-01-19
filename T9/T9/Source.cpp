@@ -2,67 +2,24 @@
 #include "Messages.h"
 #include <list>
 #include <stdexcept>
-#include "include\curses.h"
-
-void draw_borders(WINDOW *screen)
-{
-	int x, y, i;
-	getmaxyx(screen, y, x); // 4 corners 
-	mvwprintw(screen, 0, 0, "+");
-	mvwprintw(screen, y - 1, 0, "+");
-	mvwprintw(screen, 0, x - 1, "+");
-	mvwprintw(screen, y - 1, x - 1, "+"); // sides 
-	for (i = 1; i < (y - 1); i++)
-	{
-		mvwprintw(screen, i, 0, "|");
-		mvwprintw(screen, i, x - 1, "|");
-	} // top and bottom 
-	for (i = 1; i < (x - 1); i++)
-	{
-		mvwprintw(screen, 0, i, "-");
-		mvwprintw(screen, y - 1, i, "-");
-	}
-}
-void load_main_console(vector <WINDOW*> wins, vector<string> wins_titles)
-{
-
-	// draw borders		
-	vector<string>::iterator it = wins_titles.begin();
-	vector<WINDOW*>::iterator itw = wins.begin();
-	while (itw != wins.end())
-	{
-		draw_borders(*itw);
-		itw++;
-	}
-
-	itw = wins.begin();
-	while(it != wins_titles.end())
-	{
-		mvwprintw(*itw, 1, 1, (*it).c_str());
-		it++;
-		itw++;
-	}
-
-	itw = wins.begin();
-	while (itw != wins.end())
-	{
-		wrefresh(*itw);
-		itw++;
-	}
-	
-}
+#include "ConsoleManager.h"
 
 int main()
 {
-
 	// choose between Email and sms
 	int parent_x = 1000, parent_y = 500, new_x, new_y;
 	int contact_size = 6; // contact loader 
 	int topic_size = 6; // topic loader 
 	int message_size = 15; // message loader
 	int vocabulary_size = 10; // vocabulary loader
+	
 	initscr();
 	noecho();
+
+	ConsoleManager Con;
+
+	curs_set(0); // get our maximum window dimensions 
+	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
 
 	// load menu
 	/*cout << "/////// EMAIL & SMS CREATOR //////" << endl;
@@ -78,9 +35,6 @@ int main()
 		break;
 	}*/
 
-	curs_set(0); // get our maximum window dimensions 
-	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
-
 	// staticly define windows needed for visual representation
 	WINDOW *contact_window = newwin(contact_size, parent_x, 0, 0);
 	WINDOW *topic_window = newwin(topic_size, parent_x, contact_size, 0); // draw to our windows 
@@ -90,19 +44,11 @@ int main()
 	// number of windows must be equal to number of titles
 	vector<WINDOW*> wins = { contact_window, topic_window, message_window, vocabulary_window };
 	vector<string> wins_titles = { "Contact", "Topic", "Message", "Vocabulary" };
-	load_main_console(wins, wins_titles);
-
-	Trie Emails("");
-	//Trie Words("");
-	//Trie Phones("");
-
-	//ifstream file("words.txt");
-	//ifstream emails("emails.txt");
-	//ifstream phones("phones.txt");
-	string s;
+	Con.load_main_console(wins, wins_titles);
 
 	Email M;
-	M.load_vocabulary("emails.txt");
+	M.load_vocabulary("words.txt");
+	M.load_contacts();
 	M.assign_message_content("message");
 
 	string word = "";
@@ -112,7 +58,7 @@ int main()
 	char c;
 	int cursor_position_x = 1;
 	werase(contact_window);
-	draw_borders(contact_window);
+	Con.draw_borders(contact_window);
 
 	while (1)
 	{
@@ -134,7 +80,7 @@ int main()
 
 			continue;
 		}
-		else if (c == KEY_BACKSPACE)
+		else if (c == 8)
 		{
 			if (word.length() > 0)
 			{
@@ -155,7 +101,7 @@ int main()
 		wrefresh(contact_window);
 
 		str = "";
-		vector<string> r = M.load_all_words_from_voc(word);
+		vector<string> r = M.load_all_words_from_contacts(word);
 		for (vector<string>::iterator it = r.begin(); it != r.end(); it++) 
 		{
 			str += *it + ", ";
@@ -164,16 +110,89 @@ int main()
 		werase(vocabulary_window);
 		wrefresh(vocabulary_window);
 
-		draw_borders(contact_window);
-		draw_borders(topic_window); // simulate the game loop 
-		draw_borders(message_window); // simulate the game loop 
-		draw_borders(vocabulary_window); // simulate the game loop 
+		Con.draw_borders(contact_window);
+		Con.draw_borders(topic_window); // simulate the game loop 
+		Con.draw_borders(message_window); // simulate the game loop 
+		Con.draw_borders(vocabulary_window); // simulate the game loop 
 
 
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
 		wrefresh(vocabulary_window);
 
-		if (c == 27)
+		if (c == 27 || c == 9)
+		{
+			break;
+		}
+	}
+
+
+	word = "";
+	text = "";
+	str = "";
+	cursor_position_x = 1;
+	werase(topic_window);
+	Con.draw_borders(topic_window);
+
+	while (1)
+	{
+		wrefresh(topic_window);
+		c = mvwgetch(topic_window, 1, 1);
+
+		if (c == ' ')
+		{
+			if (text != "")
+			{
+				text += " ";
+			}
+			text += word;
+			word = "";
+
+			mvwprintw(topic_window, 1, 1, text.c_str());
+			cursor_position_x = text.length() + 2; // word end + space
+			wrefresh(topic_window);
+
+			continue;
+		}
+		else if (c == 8)
+		{
+			if (word.length() > 0)
+			{
+				word.pop_back();
+
+				mvwprintw(topic_window, 1, cursor_position_x - 1, word.c_str());
+				wrefresh(topic_window);
+			}
+			else {
+				word = "";
+			}
+		}
+		else {
+			word += c;
+		}
+
+		mvwprintw(topic_window, 1, cursor_position_x, word.c_str());
+		wrefresh(topic_window);
+
+		str = "";
+		vector<string> r = M.load_all_words_from_voc(word);
+		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
+		{
+			str += *it + ", ";
+		}
+
+		werase(vocabulary_window);
+		wrefresh(vocabulary_window);
+
+		Con.draw_borders(contact_window);
+		Con.draw_borders(topic_window); // simulate the game loop 
+		Con.draw_borders(message_window); // simulate the game loop 
+		Con.draw_borders(vocabulary_window); // simulate the game loop 
+
+
+		mvwprintw(vocabulary_window, 1, 1, str.c_str());
+		wrefresh(vocabulary_window);
+
+		if (c == 27 || c == 9)
 		{
 			break;
 		}
