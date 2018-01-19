@@ -133,6 +133,80 @@ int main()
 	M.load_vocabulary("emails.txt");
 	M.assign_message_content("message");
 
+
+	string word = "";
+	string text = "";
+	string str = "";
+
+	char c;
+			werase(contact_window);
+		draw_borders(contact_window);
+
+	while (1)
+	{
+		//str = "start \"Help\" cmd /C \"echo off &";
+		c = wgetch(contact_window);
+		if (c == ' ')
+		{
+			if (text != "")
+			{
+				text += " ";
+			}
+			text += word;
+			word = "";
+
+			//cout << text << "\n";
+			
+			mvwprintw(contact_window, 1, 1, text.c_str());
+			wrefresh(contact_window);
+
+			continue;
+		}
+		else if (c == 8)
+		{
+			if (word.length() > 0)
+			{
+				word.pop_back();
+			}
+			else {
+				word = "";
+			}
+		}
+		else {
+			word += c;
+		}
+		//cout << text << " " << word;
+		mvwprintw(contact_window, 1, 1, word.c_str());
+		wrefresh(contact_window);
+
+		str = "";
+		vector<string> r = M.load_all_words_from_voc(word);
+		for (vector<string>::iterator it = r.begin(); it != r.end(); it++) 
+		{
+			str += *it + ", ";
+		}
+		
+		werase(vocabulary_window);
+		wrefresh(vocabulary_window);
+
+		draw_borders(contact_window);
+		draw_borders(topic_window); // simulate the game loop 
+		draw_borders(message_window); // simulate the game loop 
+		draw_borders(vocabulary_window); // simulate the game loop 
+		draw_borders(fifth); // simulate the game loop 
+
+
+		mvwprintw(vocabulary_window, 1, 1, str.c_str());
+		wrefresh(vocabulary_window);
+
+		if (c == 27)
+		{
+			break;
+		}
+	}
+
+
+
 	vector <string> EmailVoc = M.load_all_words_from_voc("b");
 
 	string emails_str = "";
@@ -149,11 +223,10 @@ int main()
 	wrefresh(vocabulary_window);
 
 
- 	string word = "";
-	string text  = "";
-	string str = "";
+ 	word = "";
+	text  = "";
+	str = "";
 	
-	char c;
 	while (1)
 	{
 		//str = "start \"Help\" cmd /C \"echo off &";
