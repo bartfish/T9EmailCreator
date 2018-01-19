@@ -11,11 +11,87 @@
 
 // implement class which will represemt the list of contacts
 
+void draw_borders(WINDOW *screen)
+{
+	int x, y, i;
+	getmaxyx(screen, y, x); // 4 corners 
+	mvwprintw(screen, 0, 0, "+");
+	mvwprintw(screen, y - 1, 0, "+");
+	mvwprintw(screen, 0, x - 1, "+");
+	mvwprintw(screen, y - 1, x - 1, "+"); // sides 
+	for (i = 1; i < (y - 1); i++)
+	{
+		mvwprintw(screen, i, 0, "|");
+		mvwprintw(screen, i, x - 1, "|");
+	} // top and bottom 
+	for (i = 1; i < (x - 1); i++)
+	{
+		mvwprintw(screen, 0, i, "-");
+		mvwprintw(screen, y - 1, i, "-");
+	}
+}
 
 int main()
 {
 
+	// choose between Email and sms
+
+	
+
+	int parent_x = 1000, parent_y = 500, new_x, new_y;
+	int contact_size = 6; // contact loader 
+	int topic_size = 6; // topic loader 
+	int message_size = 15; // message loader
+	int vocabulary_size = 10; // vocabulary loader
+	int fifth_size = 4; // *vocabulary loader
+	// sixth window defined for navigation bar
 	initscr();
+	noecho();
+
+	curs_set(0); // get our maximum window dimensions 
+	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
+
+	WINDOW *contact_window = newwin(contact_size, parent_x, 0, 0);
+	WINDOW *topic_window = newwin(topic_size, parent_x, contact_size, 0); // draw to our windows 
+	WINDOW *message_window = newwin(message_size, parent_x, contact_size + topic_size, 0); // draw to our windows 
+	WINDOW *vocabulary_window = newwin(vocabulary_size, parent_x, contact_size + topic_size + message_size, 0); // draw to our windows 
+	WINDOW *fifth = newwin(fifth_size, parent_x, contact_size + topic_size + message_size + vocabulary_size, 0); // draw to our windows 
+/*
+	mvwprintw(contact_window, 0, 0, "contact_window");
+	mvwprintw(topic_window, 0, 0, "topic_window"); // refresh each window 
+
+	wrefresh(contact_window);
+	wrefresh(topic_window);
+	*/
+	// draw our borders 
+	draw_borders(contact_window);
+	draw_borders(topic_window); // simulate the game loop 
+	draw_borders(message_window); // simulate the game loop 
+	draw_borders(vocabulary_window); // simulate the game loop 
+	draw_borders(fifth); // simulate the game loop 
+	while (1)
+	{ 
+		// draw to our windows 
+		mvwprintw(contact_window, 1, 1, "contact_window");
+		mvwprintw(topic_window, 1, 1, "topic_window"); // refresh each window 
+		mvwprintw(message_window, 1, 1, "message_window"); // refresh each window 
+		mvwprintw(vocabulary_window, 1, 1, "vocabulary_window"); // refresh each window 
+		mvwprintw(fifth, 1, 1, "fifth"); // refresh each window 
+		wrefresh(contact_window);
+		wrefresh(topic_window);
+		wrefresh(message_window);
+		wrefresh(vocabulary_window);
+		wrefresh(fifth);
+
+	} // clean up B
+
+	//wsleep(5); // clean up 
+
+
+
+
+
+
 	Trie Emails("");
 	Trie Words("");
 	Trie Phones("");
@@ -129,7 +205,12 @@ int main()
 		
 		
 	//system("start \"Help\" cmd /C \"echo off & echo Help text 1 & echo Help text 2 & echo Help text 3 & pause\"");
-
+	delwin(contact_window);
+	delwin(topic_window);
+	delwin(message_window);
+	delwin(vocabulary_window);
+	delwin(fifth);
+	endwin();
 
 	system("pause");
 	return 0;
