@@ -54,35 +54,26 @@ int main()
 	WINDOW *topic_window = newwin(topic_size, parent_x, contact_size, 0); // draw to our windows 
 	WINDOW *message_window = newwin(message_size, parent_x, contact_size + topic_size, 0); // draw to our windows 
 	WINDOW *vocabulary_window = newwin(vocabulary_size, parent_x, contact_size + topic_size + message_size, 0); // draw to our windows 
-	WINDOW *fifth = newwin(fifth_size, parent_x, contact_size + topic_size + message_size + vocabulary_size, 0); // draw to our windows 
-/*
-	mvwprintw(contact_window, 0, 0, "contact_window");
-	mvwprintw(topic_window, 0, 0, "topic_window"); // refresh each window 
+	//WINDOW *fifth = newwin(fifth_size, parent_x, contact_size + topic_size + message_size + vocabulary_size, 0); // draw to our windows 
 
-	wrefresh(contact_window);
-	wrefresh(topic_window);
-	*/
-	// draw our borders 
+	// draw borders																											 // draw our borders 
 	draw_borders(contact_window);
 	draw_borders(topic_window); // simulate the game loop 
 	draw_borders(message_window); // simulate the game loop 
 	draw_borders(vocabulary_window); // simulate the game loop 
-	draw_borders(fifth); // simulate the game loop 
-	//while (1)
-	//{ 
-		// draw to our windows 
-		mvwprintw(contact_window, 1, 1, "contact_window");
-		mvwprintw(topic_window, 1, 1, "topic_window"); // refresh each window 
-		mvwprintw(message_window, 1, 1, "message_window"); // refresh each window 
-		mvwprintw(vocabulary_window, 1, 1, "vocabulary_window"); // refresh each window 
-		mvwprintw(fifth, 1, 1, "fifth"); // refresh each window 
-		wrefresh(contact_window);
-		wrefresh(topic_window);
-		wrefresh(message_window);
-		wrefresh(vocabulary_window);
-		wrefresh(fifth);
-	//	break;
-	//} // clean up B
+	//draw_borders(fifth); // simulate the game loop 
+	
+	// draw to our windows 
+	mvwprintw(contact_window, 1, 1, "contact_window");
+	mvwprintw(topic_window, 1, 1, "topic_window"); // refresh each window 
+	mvwprintw(message_window, 1, 1, "message_window"); // refresh each window 
+	mvwprintw(vocabulary_window, 1, 1, "vocabulary_window"); // refresh each window 
+//	mvwprintw(fifth, 1, 1, "fifth"); // refresh each window 
+	wrefresh(contact_window);
+	wrefresh(topic_window);
+	wrefresh(message_window);
+	wrefresh(vocabulary_window);
+	//wrefresh(fifth);
 
 	//wsleep(5); // clean up 
 
@@ -133,19 +124,21 @@ int main()
 	M.load_vocabulary("emails.txt");
 	M.assign_message_content("message");
 
-
 	string word = "";
 	string text = "";
 	string str = "";
 
 	char c;
-			werase(contact_window);
-		draw_borders(contact_window);
+	int cursor_position_x = 1;
+	werase(contact_window);
+	draw_borders(contact_window);
 
 	while (1)
 	{
-		//str = "start \"Help\" cmd /C \"echo off &";
-		c = wgetch(contact_window);
+		//mvwprintw(contact_window, text.length(), 1, text.c_str());
+		wrefresh(contact_window);
+
+		c = mvwgetch(contact_window, 1, 1);
 		if (c == ' ')
 		{
 			if (text != "")
@@ -154,10 +147,9 @@ int main()
 			}
 			text += word;
 			word = "";
-
-			//cout << text << "\n";
 			
 			mvwprintw(contact_window, 1, 1, text.c_str());
+			cursor_position_x = text.length()+2;
 			wrefresh(contact_window);
 
 			continue;
@@ -167,6 +159,8 @@ int main()
 			if (word.length() > 0)
 			{
 				word.pop_back();
+				//mvwprintw(contact_window, 1, 1, word.c_str());
+				wrefresh(contact_window);
 			}
 			else {
 				word = "";
@@ -176,7 +170,7 @@ int main()
 			word += c;
 		}
 		//cout << text << " " << word;
-		mvwprintw(contact_window, 1, 1, word.c_str());
+		mvwprintw(contact_window, 1, cursor_position_x, word.c_str());
 		wrefresh(contact_window);
 
 		str = "";
@@ -193,7 +187,7 @@ int main()
 		draw_borders(topic_window); // simulate the game loop 
 		draw_borders(message_window); // simulate the game loop 
 		draw_borders(vocabulary_window); // simulate the game loop 
-		draw_borders(fifth); // simulate the game loop 
+		//draw_borders(fifth); // simulate the game loop 
 
 
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
@@ -215,9 +209,6 @@ int main()
 	for (vector<string>::iterator it = r.begin(); it != r.end(); it++) {
 		//cout << *it << "\n";
 		emails_str += *it + ", ";
-
-		// show word in the next line
-		//top++;
 	}
 	mvwprintw(vocabulary_window, left, top, emails_str.c_str());
 	wrefresh(vocabulary_window);
@@ -283,13 +274,11 @@ int main()
 		
 	}
 		
-		
-	//system("start \"Help\" cmd /C \"echo off & echo Help text 1 & echo Help text 2 & echo Help text 3 & pause\"");
 	delwin(contact_window);
 	delwin(topic_window);
 	delwin(message_window);
 	delwin(vocabulary_window);
-	delwin(fifth);
+	//delwin(fifth);
 	endwin();
 
 	system("pause");
