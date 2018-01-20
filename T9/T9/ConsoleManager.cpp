@@ -7,7 +7,6 @@ void myConsoleManager::generate_windows()
 	noecho();
 	curs_set(0); // get our maximum window dimensions 
 	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
-
 	title_window = newwin(title_size, parent_x, 0, 0);
 	contact_window = newwin(contact_size, parent_x, title_size, 0);
 	topic_window = newwin(topic_size, parent_x, contact_size + title_size, 0); // draw to our windows 
@@ -17,31 +16,8 @@ void myConsoleManager::generate_windows()
 																													 // number of windows must be equal to number of titles
 	vector<WINDOW*> wins = { title_window, contact_window, topic_window, message_window, vocabulary_window };
 	vector<string> wins_titles = { "TypeOfMessageTitle", "Contact", "Topic", "Message", "Vocabulary" };
-	//this->load_main_console(wins, wins_titles);
+	myConsoleManager::load_main_console(wins, wins_titles);
 
-	// draw borders		
-	vector<string>::iterator it = wins_titles.begin();
-	vector<WINDOW*>::iterator itw = wins.begin();
-	while (itw != wins.end())
-	{
-		draw_borders(*itw);
-		itw++;
-	}
-
-	itw = wins.begin();
-	while (it != wins_titles.end())
-	{
-		mvwprintw(*itw, 1, 1, (*it).c_str());
-		it++;
-		itw++;
-	}
-
-	itw = wins.begin();
-	while (itw != wins.end())
-	{
-		wrefresh(*itw);
-		itw++;
-	}
 }
 
 
