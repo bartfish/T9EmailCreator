@@ -1,7 +1,5 @@
 #include "Messages.h"
 
-
-
 void Message::load_vocabulary(const string & file_name)
 {
 	string s;
@@ -100,6 +98,226 @@ vector<string> Email::load_all_words_from_contacts(const string & s)
 	return Emails.load_all_words(s);
 }
 
+
+void Email::create_message()
+{
+
+	string word = "";
+	string text = "";
+	string str = "";
+
+	char c;
+	int cursor_position_x = 1;
+	werase(contact_window);
+	Con.draw_borders(contact_window);
+
+	while (1)
+	{
+		wrefresh(contact_window);
+		c = mvwgetch(contact_window, 1, 1);
+
+		if (c == ' ')
+		{
+			if (text != "")
+			{
+				text += " ";
+			}
+			text += word;
+			word = "";
+
+			mvwprintw(contact_window, 1, 1, text.c_str());
+			cursor_position_x = text.length() + 2; // word end + space
+			wrefresh(contact_window);
+
+			continue;
+		}
+		else if (c == 8)
+		{
+			if (word.length() > 0)
+			{
+				word.pop_back();
+
+				mvwprintw(contact_window, 1, cursor_position_x - 1, word.c_str());
+				wrefresh(contact_window);
+			}
+			else {
+				word = "";
+			}
+		}
+		else {
+			word += c;
+		}
+
+		mvwprintw(contact_window, 1, cursor_position_x, word.c_str());
+		wrefresh(contact_window);
+
+		str = "";
+		vector<string> r = M.load_all_words_from_contacts(word);
+		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
+		{
+			str += *it + ", ";
+		}
+
+		werase(vocabulary_window);
+		wrefresh(vocabulary_window);
+
+		Con.draw_borders(contact_window);
+		Con.draw_borders(topic_window); // simulate the game loop 
+		Con.draw_borders(message_window); // simulate the game loop 
+		Con.draw_borders(vocabulary_window); // simulate the game loop 
+
+
+		mvwprintw(vocabulary_window, 1, 1, str.c_str());
+		wrefresh(vocabulary_window);
+
+		if (c == 27 || c == 9)
+		{
+			break;
+		}
+	}
+
+	word = "";
+	text = "";
+	str = "";
+	cursor_position_x = 1;
+	werase(topic_window);
+	Con.draw_borders(topic_window);
+
+	while (1)
+	{
+		wrefresh(topic_window);
+		c = mvwgetch(topic_window, 1, 1);
+
+		if (c == ' ')
+		{
+			if (text != "")
+			{
+				text += " ";
+			}
+			text += word;
+			word = "";
+
+			mvwprintw(topic_window, 1, 1, text.c_str());
+			cursor_position_x = text.length() + 2; // word end + space
+			wrefresh(topic_window);
+
+			continue;
+		}
+		else if (c == 8)
+		{
+			if (word.length() > 0)
+			{
+				word.pop_back();
+
+				mvwprintw(topic_window, 1, cursor_position_x - 1, word.c_str());
+				wrefresh(topic_window);
+			}
+			else {
+				word = "";
+			}
+		}
+		else {
+			word += c;
+		}
+
+		mvwprintw(topic_window, 1, cursor_position_x, word.c_str());
+		wrefresh(topic_window);
+
+		str = "";
+		vector<string> r = M.load_all_words_from_voc(word);
+		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
+		{
+			str += *it + ", ";
+		}
+
+		werase(vocabulary_window);
+		wrefresh(vocabulary_window);
+
+		Con.draw_borders(contact_window);
+		Con.draw_borders(topic_window); // simulate the game loop 
+		Con.draw_borders(message_window); // simulate the game loop 
+		Con.draw_borders(vocabulary_window); // simulate the game loop 
+
+		mvwprintw(vocabulary_window, 1, 1, str.c_str());
+		wrefresh(vocabulary_window);
+
+		if (c == 27 || c == 9)
+		{
+			break;
+		}
+	}
+
+	word = "";
+	text = "";
+	str = "";
+	cursor_position_x = 1;
+	werase(message_window);
+	Con.draw_borders(message_window);
+
+	while (1)
+	{
+		wrefresh(message_window);
+		c = mvwgetch(message_window, 1, 1);
+
+		if (c == ' ')
+		{
+			if (text != "")
+			{
+				text += " ";
+			}
+			text += word;
+			word = "";
+
+			mvwprintw(message_window, 1, 1, text.c_str());
+			cursor_position_x = text.length() + 2; // word end + space
+			wrefresh(message_window);
+
+			continue;
+		}
+		else if (c == 8)
+		{
+			if (word.length() > 0)
+			{
+				word.pop_back();
+
+				mvwprintw(message_window, 1, cursor_position_x - 1, word.c_str());
+				wrefresh(message_window);
+			}
+			else {
+				word = "";
+			}
+		}
+		else {
+			word += c;
+		}
+
+		mvwprintw(message_window, 1, cursor_position_x, word.c_str());
+		wrefresh(message_window);
+
+		str = "";
+		vector<string> r = M.load_all_words_from_voc(word);
+		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
+		{
+			str += *it + ", ";
+		}
+
+		werase(vocabulary_window);
+		wrefresh(vocabulary_window);
+
+		Con.draw_borders(contact_window);
+		Con.draw_borders(topic_window); // simulate the game loop 
+		Con.draw_borders(message_window); // simulate the game loop 
+		Con.draw_borders(vocabulary_window); // simulate the game loop 
+
+		mvwprintw(vocabulary_window, 1, 1, str.c_str());
+		wrefresh(vocabulary_window);
+
+		if (c == 27 || c == 9)
+		{
+			break;
+		}
+	}
+}
 
 
 

@@ -25,6 +25,8 @@ public:
 	{
 		return Vocabulary.load_all_words("a");
 	}
+	virtual void create_message() {}
+	virtual void save_message() {}
 
 	void load_vocabulary(const string & filename);
 	vector<string> load_all_words_from_voc(const string & s);
@@ -68,6 +70,8 @@ public:
 	void inputting_contact_info() {};
 	void load_contacts();
 	vector<string> load_all_words_from_contacts(const string & s);
+	void create_message() {}
+	void save_message() {} // save to "Emails" folder
 
 };
 
@@ -98,6 +102,8 @@ public:
 	void assign_recipient(const string &s);
 	void assign_message_content(const string &s);
 	vector<string> load_all_words_from_contacts(const string & s);
+	void create_message() {}
+	void save_message() {} // save to "SMS" folder
 };
 
 
