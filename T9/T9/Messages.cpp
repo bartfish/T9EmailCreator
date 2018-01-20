@@ -99,8 +99,15 @@ vector<string> Email::load_all_words_from_contacts(const string & s)
 }
 
 
-void Email::create_message()
+void Email::create_message(myConsoleManager Con)
 {
+
+	// call console method get_windowtype() and assign windows to the ones from here
+	WINDOW *title_window = Con.get_title_window();
+	WINDOW *contact_window = Con.get_contact_window();
+	WINDOW *topic_window = Con.get_topic_window();
+	WINDOW *message_window = Con.get_message_window();
+	WINDOW *vocabulary_window = Con.get_vocabulary_window();
 
 	string word = "";
 	string text = "";
@@ -152,7 +159,7 @@ void Email::create_message()
 		wrefresh(contact_window);
 
 		str = "";
-		vector<string> r = M.load_all_words_from_contacts(word);
+		vector<string> r = this->load_all_words_from_contacts(word);
 		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
 		{
 			str += *it + ", ";
@@ -224,7 +231,7 @@ void Email::create_message()
 		wrefresh(topic_window);
 
 		str = "";
-		vector<string> r = M.load_all_words_from_voc(word);
+		vector<string> r = this->load_all_words_from_voc(word);
 		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
 		{
 			str += *it + ", ";
@@ -295,7 +302,7 @@ void Email::create_message()
 		wrefresh(message_window);
 
 		str = "";
-		vector<string> r = M.load_all_words_from_voc(word);
+		vector<string> r = this->load_all_words_from_voc(word);
 		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
 		{
 			str += *it + ", ";
@@ -317,6 +324,11 @@ void Email::create_message()
 			break;
 		}
 	}
+
+	delwin(contact_window);
+	delwin(topic_window);
+	delwin(message_window);
+	delwin(vocabulary_window);
 }
 
 
