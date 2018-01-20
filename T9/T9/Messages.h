@@ -1,3 +1,4 @@
+#pragma once
 #include "libraries.h"
 #include "Trie.h"
 #include "myConsoleManager.h"
@@ -32,79 +33,6 @@ public:
 	vector<string> load_all_words_from_voc(const string & s);
 };
 
-
-// for the email validate email format
-// no limit for the number of signs
-class Email : public Message
-{
-private:
-	Trie Emails;
-	string topic;
-	unsigned int priority_type;
-	enum Priority : unsigned int
-	{
-		HIGH = 1,
-		NORMAL = 2,
-		LOW = 3
-	};
-
-
-public:
-	Email() : Emails(""), topic("Not set"), priority_type(NORMAL) {}
-	~Email() {}
-
-	bool is_valid_recepient_info(const string &s);
-
-	void assign_recipient(const string &s);
-	void assign_message_content(const string &s);
-
-	// helper functions created for the purpose of validating email address
-	bool is_character(const char & c) {
-		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
-	}
-	bool is_number(const char & c) {
-		return (c >= '0' && c <= '9');
-	}
-
-	//template <T> MessageType;
-	void inputting_contact_info() {};
-	void load_contacts();
-	vector<string> load_all_words_from_contacts(const string & s);
-	void create_message(myConsoleManager Con);
-	//void save_message(); // save to "Emails" folder
-
-};
-
-
-
-
-
-
-// for the SMS validate the contact number 
-// maximum number of signs is 256
-
-class SMS : public Message
-{
-private:
-	Trie Contacts;
-	enum SMS_TYPE : unsigned int
-	{
-		SMS_TEXT = 1,
-		SMS_IMG = 2
-	};
-
-public:
-	SMS() : Contacts("") {}
-	~SMS() {}
-
-	bool is_valid_recepient_info(const string &s) { return true;  }
-
-	void assign_recipient(const string &s);
-	void assign_message_content(const string &s);
-	vector<string> load_all_words_from_contacts(const string & s);
-	void create_message(myConsoleManager Con);
-	//void save_message(); // save to "SMS" folder
-};
 
 
 

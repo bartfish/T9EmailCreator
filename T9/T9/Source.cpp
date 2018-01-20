@@ -1,5 +1,5 @@
-#include "Trie.h"
 #include "Messages.h"
+#include "Email.h"
 #include <list>
 #include <stdexcept>
 
