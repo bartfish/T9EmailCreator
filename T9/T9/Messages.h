@@ -26,8 +26,6 @@ public:
 		return Vocabulary.load_all_words("a");
 	}
 
-
-
 	void load_vocabulary(const string & filename);
 	vector<string> load_all_words_from_voc(const string & s);
 };
@@ -91,7 +89,6 @@ private:
 		SMS_IMG = 2
 	};
 
-
 public:
 	SMS() : Contacts("") {}
 	~SMS() {}
@@ -102,6 +99,26 @@ public:
 	void assign_message_content(const string &s);
 	vector<string> load_all_words_from_contacts(const string & s);
 };
+
+
+
+class my_exception : public exception
+{
+	string theFile;
+	int theLine;
+	exception theEx;
+
+public:
+	my_exception()
+	{
+	}
+	virtual const char * what() const throw()
+	{
+		return "Custom exception";
+	}
+};
+
+
 
 
 class error_m : public exception {
@@ -129,19 +146,40 @@ public:
 		return y;
 	}
 };
-class my_exception : public exception
-{
-	string theFile;
-	int theLine;
-	exception theEx;
 
-public:
-	my_exception()
-	{
-	}
-	virtual const char * what() const throw()
-	{
-		return "Custom exception";
-	}
+template<class object_type>
+class PromptManager
+{
+	private:
+		string EmailTitle, SMSTitle;
+	public:
+		PromptManager() : EmailTitle(""), SMSTitle("") {}
+		~PromptManager() {}
+
+		void setMessageTitle(object_type obj)
+		{
+
+			if (typeof(obj) == Email)
+			{
+				EmailTitle = "Creating Email";
+			}
+			else if (typeof(obj) == SMS)
+			{
+				SMSTitle = "Creating SMS";
+			}
+		}
+		string getMessageTitle(object_type obj)
+		{
+
+			if (typeof(obj) == Email)
+			{
+				return EmailTitle;
+			}
+			else if (typeof(obj) == SMS)
+			{
+				return SMSTitle;
+			}
+		}
 };
+
 
