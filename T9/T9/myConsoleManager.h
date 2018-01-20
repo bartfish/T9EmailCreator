@@ -29,7 +29,7 @@ public:
 	}
 	~myConsoleManager() {};
 
-	void generate_windows();
+	void generate_message_windows();
 	void draw_borders(WINDOW *screen);
 	void load_main_console(vector <WINDOW*> wins, vector<string> wins_titles);
 

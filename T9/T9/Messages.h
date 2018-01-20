@@ -20,7 +20,7 @@ public:
 	virtual void assign_recipient(const string &s) {}
 	virtual void assign_message_content(const string &s) {}
 
-	virtual void load_contacts(const string &s) {}
+	virtual void load_contacts() {}
 	virtual void inputting_contact_info() {}
 	virtual vector<string> load_all_words_from_contacts(const string & s) 
 	{

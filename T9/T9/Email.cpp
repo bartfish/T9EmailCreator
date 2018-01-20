@@ -1,8 +1,6 @@
 #include "Email.h"
 #include <string>
 
-
-
 bool Email::is_valid_recepient_info(const string &email)
 {
 	// Validate email
@@ -51,7 +49,7 @@ void Email::assign_recipient(const string &s)
 	}
 	catch (exception & e)
 	{
-		cout << e.what() << endl;
+		cout << e.what() << " Message: email format is not correct" << endl;
 	}
 }
 void Email::assign_message_content(const string &s)
@@ -68,6 +66,10 @@ void Email::load_contacts()
 	while (getline(words_file, s))
 	{
 		n++;
+
+		// validate inserted email
+		Email::assign_recipient(s);
+
 		Emails.insert(s);
 		transform(s.begin(), s.end(), s.begin(), ::tolower);
 	}
