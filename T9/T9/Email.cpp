@@ -130,7 +130,7 @@ void Email::create_message(myConsoleManager Con)
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
 		wrefresh(vocabulary_window);
 
-		if (c == 27 || c == 9)
+		if (c == 9)
 		{
 			// validate email inserted if is not found in the trie
 			// if not valid do not break, show validation message and clear window
@@ -167,6 +167,28 @@ void Email::create_message(myConsoleManager Con)
 				}
 			}
 			
+		}
+
+		if (c == 27)
+		{
+			// ask if user is sure to exit
+			werase(title_window);
+			mvwprintw(title_window, 1, 1, "Press: y - to exit, n - to stay");
+			Con.draw_borders(title_window);
+			wrefresh(title_window);
+			
+			c = wgetch(title_window);
+			if (c == 'y')
+			{
+				break;
+			}
+			else {
+				// backup default title window
+				Con.set_default_title_window();
+				// continue editing
+				continue;
+			}
+			// go to main navigation
 		}
 	}
 
@@ -229,7 +251,7 @@ void Email::create_message(myConsoleManager Con)
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
 		wrefresh(vocabulary_window);
 
-		if (c == 27 || c == 9)
+		if (c == 9)
 		{
 			break;
 		}
@@ -306,7 +328,7 @@ void Email::create_message(myConsoleManager Con)
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
 		wrefresh(vocabulary_window);
 
-		if (c == 27 || c == 9)
+		if (c == 9)
 		{
 			break;
 		}

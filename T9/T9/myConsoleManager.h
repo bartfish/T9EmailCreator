@@ -22,6 +22,8 @@ class myConsoleManager
 			vocabulary_size, // vocabulary loader
 			error_size; // field for validation messages
 
+		string navigation_bar_informations;
+
 public:
 	myConsoleManager() {
 		
@@ -32,6 +34,7 @@ public:
 		topic_size = 6, // topic loader 
 		message_size = 15, // message loader
 		vocabulary_size = 10; // vocabulary loader
+		navigation_bar_informations = "Press: ESC - to quit, CTRL+S - to save, TAB - to go to the next field";
 
 	}
 	~myConsoleManager() {};
@@ -51,4 +54,5 @@ public:
 	inline int get_parent_y() { return parent_y; }
 
 	void backspace_clicked(string &s, int cursor_position_x, WINDOW *the_window);
+	void set_default_title_window();
 };
