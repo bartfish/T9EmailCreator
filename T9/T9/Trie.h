@@ -8,8 +8,9 @@ public:
 
 	Trie(const string &);
 	void add(char);
-	string find(const string &); // overloading classic function
+	//string find(const string &); // overloading classic function
 	void insert(const string &);
+
 	vector<string> all_prefixes();
 	vector<string> load_all_words(const string &);
 };

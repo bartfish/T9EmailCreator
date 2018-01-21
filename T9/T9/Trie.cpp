@@ -10,8 +10,8 @@ void Trie::add(char c) {
 	else
 		children[c] = Trie(value + c);
 }
-
-string Trie::find(const string &word) {
+/*
+string Trie::findChar(const string &word) {
 	Trie * node = this;
 	for (int i = 0; i < word.length(); i++) {
 		const char c = word[i];
@@ -22,7 +22,7 @@ string Trie::find(const string &word) {
 	}
 	return node->value;
 }
-
+*/
 void Trie::insert(const string &word) {
 	Trie * node = this;
 	for (int i = 0; i < word.length(); i++) {

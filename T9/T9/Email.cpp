@@ -31,26 +31,15 @@ bool Email::is_valid_recepient_info(const string &email)
 	}
 	if ((!is_at || !is_dot))
 	{
-		false;
+		return false;
 	}
-	return true;
+	else {
+		return true;
+	}
 }
 void Email::assign_recipient(const string &s)
 {
-	// Validate email
-	bool is_valid_email_address = is_valid_recepient_info(s);
-	try
-	{
-		if (is_valid_email_address)
-		{
-			recipient_info = s;
-		}
-		throw error_m(__FILE__, __LINE__, my_exception());
-	}
-	catch (exception & e)
-	{
-		cout << e.what() << " Message: email format is not correct" << endl;
-	}
+	recipient_info = s;
 }
 void Email::assign_message_content(const string &s)
 {
@@ -66,10 +55,6 @@ void Email::load_contacts()
 	while (getline(words_file, s))
 	{
 		n++;
-
-		// validate inserted email
-		Email::assign_recipient(s);
-
 		Emails.insert(s);
 		transform(s.begin(), s.end(), s.begin(), ::tolower);
 	}
@@ -80,7 +65,6 @@ vector<string> Email::load_all_words_from_contacts(const string & s)
 }
 void Email::create_message(myConsoleManager Con)
 {
-
 	// call console method get_windowtype() and assign windows to the ones from here
 	WINDOW *title_window = Con.get_title_window();
 	WINDOW *contact_window = Con.get_contact_window();
@@ -102,20 +86,24 @@ void Email::create_message(myConsoleManager Con)
 		wrefresh(contact_window);
 		c = mvwgetch(contact_window, 1, 1);
 
-		if (c == ' ')
+		if (c == ' ') // disable spaces
 		{
 			if (text != "")
 			{
 				text += " ";
 			}
+			else {
+				continue;
+			}
+			/*
 			text += word;
 			word = "";
 
 			mvwprintw(contact_window, 1, 1, text.c_str());
 			cursor_position_x = text.length() + 2; // word end + space
 			wrefresh(contact_window);
-
-			continue;
+		
+			continue;	*/
 		}
 		else if (c == 8)
 		{
@@ -158,7 +146,35 @@ void Email::create_message(myConsoleManager Con)
 
 		if (c == 27 || c == 9)
 		{
-			break;
+			// validate email inserted if is not found in the trie
+				
+			// if not valid do not break, show validation message and clear window
+			bool is_valid_email_address = is_valid_recepient_info(word);
+
+			try
+			{
+				if (is_valid_email_address)
+				{
+					recipient_info = word;
+					throw true;
+				}
+				throw false;
+			}
+			catch (bool e)
+			{
+				if (e)
+				{
+					break;
+				}
+				else {
+					werase(contact_window);
+					Con.draw_borders(contact_window);
+
+					wrefresh(contact_window);
+					continue;
+				}
+			}
+			
 		}
 	}
 
@@ -173,7 +189,6 @@ void Email::create_message(myConsoleManager Con)
 	{
 		wrefresh(topic_window);
 		c = mvwgetch(topic_window, 1, 1);
-
 		if (c == ' ')
 		{
 			if (text != "")

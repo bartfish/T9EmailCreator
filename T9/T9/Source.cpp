@@ -7,8 +7,7 @@
 int main()
 {
 	// choose between Email and sms
-	
-	Email *E = new Email();
+/*	Email *E = new Email();
 	SMS *S = new SMS();
 	Message *Mess = new Message();
 	// load menu
@@ -31,15 +30,16 @@ int main()
 	}
 	cout << typeid(Mess).name() << endl;
 	system("pause");
+	*/
 	// defined windows needed for visual representation
 	myConsoleManager Cons;
 	Cons.generate_message_windows();
-
-	//Email M;
-	Mess->load_vocabulary("words.txt");
-	Mess->load_contacts();
-	Mess->assign_message_content("message");
-	Mess->create_message(Cons);
+	
+	Email M;
+	M.load_vocabulary("words.txt");
+	M.load_contacts();
+	M.assign_message_content("message");
+	M.create_message(Cons);
 
 	// load options
 		// save message
