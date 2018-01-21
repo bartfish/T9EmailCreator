@@ -3,7 +3,6 @@
 
 bool Email::is_valid_recepient_info(const string &email)
 {
-	// Validate email
 	if (email.empty())
 	{
 		return false;
@@ -79,6 +78,7 @@ void Email::create_message(myConsoleManager Con)
 
 	char c;
 	int cursor_position_x = 1;
+	int cursor_position_y = 1;
 	werase(contact_window);
 	Con.draw_borders(contact_window);
 
@@ -101,11 +101,7 @@ void Email::create_message(myConsoleManager Con)
 		{
 			if (word.length() > 0)
 			{
-				word.pop_back();
-				werase(contact_window);
-				mvwprintw(contact_window, 1, cursor_position_x - 1, word.c_str());
-				wrefresh(contact_window);
-				Con.draw_borders(contact_window);
+				Con.backspace_clicked(word, cursor_position_x, contact_window);
 			}
 			else {
 				word = "";
@@ -129,8 +125,6 @@ void Email::create_message(myConsoleManager Con)
 		wrefresh(vocabulary_window);
 
 		Con.draw_borders(contact_window);
-		Con.draw_borders(topic_window); 
-		Con.draw_borders(message_window);
 		Con.draw_borders(vocabulary_window); 
 
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
@@ -206,10 +200,7 @@ void Email::create_message(myConsoleManager Con)
 		{
 			if (word.length() > 0)
 			{
-				word.pop_back();
-
-				mvwprintw(topic_window, 1, cursor_position_x - 1, word.c_str());
-				wrefresh(topic_window);
+				Con.backspace_clicked(text, cursor_position_x, topic_window);
 			}
 			else {
 				word = "";
@@ -232,10 +223,8 @@ void Email::create_message(myConsoleManager Con)
 		werase(vocabulary_window);
 		wrefresh(vocabulary_window);
 
-		Con.draw_borders(contact_window);
-		Con.draw_borders(topic_window); // simulate the game loop 
-		Con.draw_borders(message_window); // simulate the game loop 
-		Con.draw_borders(vocabulary_window); // simulate the game loop 
+		Con.draw_borders(topic_window);
+		Con.draw_borders(vocabulary_window);
 
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
 		wrefresh(vocabulary_window);
@@ -250,6 +239,7 @@ void Email::create_message(myConsoleManager Con)
 	text = "";
 	str = "";
 	cursor_position_x = 1;
+	cursor_position_y = 1;
 	werase(message_window);
 	Con.draw_borders(message_window);
 
@@ -273,14 +263,21 @@ void Email::create_message(myConsoleManager Con)
 
 			continue;
 		}
+		else if (c == '\n')
+		{
+			// include new line into message field
+			cursor_position_y++;
+			text += c;
+			mvwprintw(message_window, cursor_position_y, 1, text.c_str());
+			cursor_position_x = text.length() + 2; // word end + space
+			wrefresh(message_window);
+			continue;
+		}
 		else if (c == 8)
 		{
 			if (word.length() > 0)
 			{
-				word.pop_back();
-
-				mvwprintw(message_window, 1, cursor_position_x - 1, word.c_str());
-				wrefresh(message_window);
+				Con.backspace_clicked(text, cursor_position_x, message_window);
 			}
 			else {
 				word = "";
@@ -303,10 +300,8 @@ void Email::create_message(myConsoleManager Con)
 		werase(vocabulary_window);
 		wrefresh(vocabulary_window);
 
-		Con.draw_borders(contact_window);
-		Con.draw_borders(topic_window); // simulate the game loop 
-		Con.draw_borders(message_window); // simulate the game loop 
-		Con.draw_borders(vocabulary_window); // simulate the game loop 
+		Con.draw_borders(message_window);
+		Con.draw_borders(vocabulary_window); 
 
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
 		wrefresh(vocabulary_window);
@@ -321,6 +316,7 @@ void Email::create_message(myConsoleManager Con)
 	delwin(topic_window);
 	delwin(message_window);
 	delwin(vocabulary_window);
+	delwin(error_window);
 }
 
 

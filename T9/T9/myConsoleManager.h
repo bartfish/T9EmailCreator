@@ -25,7 +25,7 @@ class myConsoleManager
 public:
 	myConsoleManager() {
 		
-		parent_x = 1000, 
+		parent_x = 200, 
 		parent_y = 500, 
 		title_size = 3, // contact loader 
 		contact_size = 6, // contact loader 
@@ -49,4 +49,6 @@ public:
 
 	inline int get_parent_x() { return parent_x; }
 	inline int get_parent_y() { return parent_y; }
+
+	void backspace_clicked(string &s, int cursor_position_x, WINDOW *the_window);
 };

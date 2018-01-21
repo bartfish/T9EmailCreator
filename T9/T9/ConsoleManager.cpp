@@ -14,9 +14,12 @@ void myConsoleManager::generate_message_windows()
 	message_window = newwin(message_size, parent_x, contact_size + topic_size + title_size, 0); // draw to our windows 
 	vocabulary_window = newwin(vocabulary_size, parent_x, contact_size + topic_size + message_size + title_size, 0); // draw to our windows 
 	error_window = newwin(error_size, parent_x, contact_size + topic_size + message_size + title_size + vocabulary_size, 0); // draw to our windows 
-																											 // number of windows must be equal to number of titles
+	
+	string navigation_bar_informations = "Press: ESC - to quit, CTRL+S - to save, TAB - to go to the next field";
+
+	// number of windows must be equal to number of titles
 	vector<WINDOW*> wins = { title_window, contact_window, topic_window, message_window, vocabulary_window, error_window };
-	vector<string> wins_titles = { "TypeOfMessageTitle", "Contact", "Topic", "Message", "Vocabulary", "Error window for valdation messages" };
+	vector<string> wins_titles = { navigation_bar_informations, "Contact", "Topic", "Message", "Vocabulary", "Error window for valdation messages" };
 	myConsoleManager::load_main_console(wins, wins_titles);
 
 }
@@ -70,4 +73,13 @@ void myConsoleManager::load_main_console(vector <WINDOW*> wins, vector<string> w
 		itw++;
 	}
 
+}
+
+void myConsoleManager::backspace_clicked(string &s, int cursor_position_x, WINDOW *the_window)
+{
+	s.pop_back();
+	werase(the_window);
+	mvwprintw(the_window, 1, cursor_position_x - 1, s.c_str());
+	wrefresh(the_window);
+	myConsoleManager::draw_borders(the_window);
 }
