@@ -134,7 +134,7 @@ void Email::create_message(myConsoleManager Con)
 		{
 			// validate email inserted if is not found in the trie
 			// if not valid do not break, show validation message and clear window
-			bool is_valid_email_address = is_valid_recepient_info(word);
+			bool is_valid_email_address = Email::is_valid_recepient_info(word);
 
 			try
 			{
@@ -180,6 +180,10 @@ void Email::create_message(myConsoleManager Con)
 			c = wgetch(title_window);
 			if (c == 'y')
 			{
+				// clear the screen for the navigation bar
+				Con.clear_screen_from_message_windows();
+				Con.generate_navigation_bar();
+
 				return;
 			}
 			else {

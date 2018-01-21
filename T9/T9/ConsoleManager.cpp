@@ -90,3 +90,35 @@ void myConsoleManager::set_default_title_window()
 	wrefresh(title_window);
 
 }
+
+void myConsoleManager::clear_screen_from_message_windows()
+{
+	werase(title_window);
+	werase(contact_window);
+	werase(topic_window);
+	werase(message_window);
+	werase(vocabulary_window);
+	werase(error_window);
+
+	wrefresh(title_window);
+	wrefresh(contact_window);
+	wrefresh(topic_window);
+	wrefresh(message_window);
+	wrefresh(vocabulary_window);
+	wrefresh(error_window);
+}
+
+void myConsoleManager::generate_navigation_bar()
+{
+	initscr();
+	noecho();
+	curs_set(0); // get our maximum window dimensions 
+	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
+
+	clear_screen_from_message_windows();
+
+	nav_window = newwin(nav_size, parent_x, 0, 0);
+	mvwprintw(nav_window, 1, 1, "Navigation bar");
+	draw_borders(nav_window);
+	wrefresh(nav_window);
+}

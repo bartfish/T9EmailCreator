@@ -7,7 +7,8 @@ class myConsoleManager
 		int x, y, i;
 
 		// windows variables here
-		WINDOW * title_window,
+		WINDOW * nav_window,
+			*title_window,
 			*contact_window,
 			*topic_window,
 			*message_window,
@@ -15,6 +16,7 @@ class myConsoleManager
 			*error_window;
 
 		int parent_x, parent_y,
+			nav_size, // navigation bar loader
 			title_size, // contact loader 
 			contact_size, // contact loader 
 			topic_size, // topic loader 
@@ -29,6 +31,7 @@ public:
 		
 		parent_x = 200, 
 		parent_y = 500, 
+		nav_size = 5, // contact loader 
 		title_size = 3, // contact loader 
 		contact_size = 6, // contact loader 
 		topic_size = 6, // topic loader 
@@ -43,6 +46,7 @@ public:
 	void draw_borders(WINDOW *screen);
 	void load_main_console(vector <WINDOW*> wins, vector<string> wins_titles);
 
+	inline WINDOW * get_nav_window() { return nav_window; }
 	inline WINDOW * get_title_window() { return title_window; }
 	inline WINDOW * get_contact_window() { return contact_window; }
 	inline WINDOW * get_topic_window() { return topic_window; }
@@ -55,4 +59,6 @@ public:
 
 	void backspace_clicked(string &s, int cursor_position_x, WINDOW *the_window);
 	void set_default_title_window();
+	void clear_screen_from_message_windows();
+	void generate_navigation_bar();
 };
