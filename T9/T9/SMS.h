@@ -8,6 +8,7 @@ class SMS : public Message
 {
 private:
 	Trie Contacts;
+	string invalid_number_message;
 	enum SMS_TYPE : unsigned int
 	{
 		SMS_TEXT = 1,
@@ -15,15 +16,16 @@ private:
 	};
 
 public:
-	SMS() : Contacts("") {}
+	SMS() : 
+		Contacts(""),
+		invalid_number_message("Please, enter valid phone number (9 digits).") {}
 	~SMS() {}
 
-	bool is_valid_recepient_info(const string &s) { return true; }
-	void load_contacts() {}
-
+	bool is_valid_recepient_info(const string &s);
+	void load_contacts();
 	void assign_recipient(const string &s);
 	void assign_message_content(const string &s);
 	vector<string> load_all_words_from_contacts(const string & s);
-	void create_message(myConsoleManager Con) {}
+	void create_message(myConsoleManager Con);
 	//void save_message(); // save to "SMS" folder
 };

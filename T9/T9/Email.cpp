@@ -180,7 +180,7 @@ void Email::create_message(myConsoleManager Con)
 			c = wgetch(title_window);
 			if (c == 'y')
 			{
-				break;
+				return;
 			}
 			else {
 				// backup default title window

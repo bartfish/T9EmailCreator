@@ -31,6 +31,14 @@ public:
 
 	void load_vocabulary(const string & filename);
 	vector<string> load_all_words_from_voc(const string & s);
+
+	// helper functions created for the purpose of validating email address
+	bool is_character(const char & c) {
+		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+	}
+	bool is_number(const char & c) {
+		return (c >= '0' && c <= '9');
+	}
 };
 
 
