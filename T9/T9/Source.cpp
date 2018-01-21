@@ -41,7 +41,7 @@ int main()
 	M.assign_message_content("message");
 	M.create_message(Cons);
 
-	// load options
+	// load options 
 		// save message
 
 	endwin();
