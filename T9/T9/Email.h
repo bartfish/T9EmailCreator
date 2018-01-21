@@ -6,7 +6,7 @@ class Email : public Message
 {
 private:
 	Trie Emails;
-	string topic;
+	string topic, invalid_email_message;
 	unsigned int priority_type;
 	enum Priority : unsigned int
 	{
@@ -17,7 +17,12 @@ private:
 
 
 public:
-	Email() : Emails(""), topic("Not set"), priority_type(NORMAL) {}
+	Email() : 
+		Emails(""),
+		topic("Not set"), 
+		priority_type(NORMAL),
+		invalid_email_message("Please, enter valid email address(e.x. example@example.com)") 
+	{}
 	~Email() {}
 
 	bool is_valid_recepient_info(const string &s);

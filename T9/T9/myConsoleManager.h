@@ -7,13 +7,20 @@ class myConsoleManager
 		int x, y, i;
 
 		// windows variables here
-		WINDOW * title_window, *contact_window, *topic_window, *message_window, *vocabulary_window;
+		WINDOW * title_window,
+			*contact_window,
+			*topic_window,
+			*message_window,
+			*vocabulary_window,
+			*error_window;
+
 		int parent_x, parent_y,
 			title_size, // contact loader 
 			contact_size, // contact loader 
 			topic_size, // topic loader 
 			message_size, // message loader
-			vocabulary_size; // vocabulary loader
+			vocabulary_size, // vocabulary loader
+			error_size; // field for validation messages
 
 public:
 	myConsoleManager() {
@@ -38,6 +45,7 @@ public:
 	inline WINDOW * get_topic_window() { return topic_window; }
 	inline WINDOW * get_message_window() { return message_window; }
 	inline WINDOW * get_vocabulary_window() { return vocabulary_window; }
+	inline WINDOW * get_error_window() { return error_window; }
 
 	inline int get_parent_x() { return parent_x; }
 	inline int get_parent_y() { return parent_y; }

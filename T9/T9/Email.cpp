@@ -71,6 +71,7 @@ void Email::create_message(myConsoleManager Con)
 	WINDOW *topic_window = Con.get_topic_window();
 	WINDOW *message_window = Con.get_message_window();
 	WINDOW *vocabulary_window = Con.get_vocabulary_window();
+	WINDOW *error_window = Con.get_error_window();
 
 	string word = "";
 	string text = "";
@@ -95,24 +96,16 @@ void Email::create_message(myConsoleManager Con)
 			else {
 				continue;
 			}
-			/*
-			text += word;
-			word = "";
-
-			mvwprintw(contact_window, 1, 1, text.c_str());
-			cursor_position_x = text.length() + 2; // word end + space
-			wrefresh(contact_window);
-		
-			continue;	*/
 		}
 		else if (c == 8)
 		{
 			if (word.length() > 0)
 			{
 				word.pop_back();
-
+				werase(contact_window);
 				mvwprintw(contact_window, 1, cursor_position_x - 1, word.c_str());
 				wrefresh(contact_window);
+				Con.draw_borders(contact_window);
 			}
 			else {
 				word = "";
@@ -136,10 +129,9 @@ void Email::create_message(myConsoleManager Con)
 		wrefresh(vocabulary_window);
 
 		Con.draw_borders(contact_window);
-		Con.draw_borders(topic_window); // simulate the game loop 
-		Con.draw_borders(message_window); // simulate the game loop 
-		Con.draw_borders(vocabulary_window); // simulate the game loop 
-
+		Con.draw_borders(topic_window); 
+		Con.draw_borders(message_window);
+		Con.draw_borders(vocabulary_window); 
 
 		mvwprintw(vocabulary_window, 1, 1, str.c_str());
 		wrefresh(vocabulary_window);
@@ -147,7 +139,6 @@ void Email::create_message(myConsoleManager Con)
 		if (c == 27 || c == 9)
 		{
 			// validate email inserted if is not found in the trie
-				
 			// if not valid do not break, show validation message and clear window
 			bool is_valid_email_address = is_valid_recepient_info(word);
 
@@ -167,10 +158,17 @@ void Email::create_message(myConsoleManager Con)
 					break;
 				}
 				else {
+					word = "";
 					werase(contact_window);
+					werase(error_window);
+
+					mvwprintw(error_window, 1, 1, invalid_email_message.c_str());
+
 					Con.draw_borders(contact_window);
+					Con.draw_borders(error_window);
 
 					wrefresh(contact_window);
+					wrefresh(error_window);
 					continue;
 				}
 			}

@@ -1,21 +1,22 @@
 #include "libraries.h"
 #include "myConsoleManager.h"
 
-void myConsoleManager::generate_windows()
+void myConsoleManager::generate_message_windows()
 {
 	initscr();
 	noecho();
 	curs_set(0); // get our maximum window dimensions 
 	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
+	
 	title_window = newwin(title_size, parent_x, 0, 0);
 	contact_window = newwin(contact_size, parent_x, title_size, 0);
 	topic_window = newwin(topic_size, parent_x, contact_size + title_size, 0); // draw to our windows 
 	message_window = newwin(message_size, parent_x, contact_size + topic_size + title_size, 0); // draw to our windows 
 	vocabulary_window = newwin(vocabulary_size, parent_x, contact_size + topic_size + message_size + title_size, 0); // draw to our windows 
-	
-																													 // number of windows must be equal to number of titles
-	vector<WINDOW*> wins = { title_window, contact_window, topic_window, message_window, vocabulary_window };
-	vector<string> wins_titles = { "TypeOfMessageTitle", "Contact", "Topic", "Message", "Vocabulary" };
+	error_window = newwin(error_size, parent_x, contact_size + topic_size + message_size + title_size + vocabulary_size, 0); // draw to our windows 
+																											 // number of windows must be equal to number of titles
+	vector<WINDOW*> wins = { title_window, contact_window, topic_window, message_window, vocabulary_window, error_window };
+	vector<string> wins_titles = { "TypeOfMessageTitle", "Contact", "Topic", "Message", "Vocabulary", "Error window for valdation messages" };
 	myConsoleManager::load_main_console(wins, wins_titles);
 
 }
