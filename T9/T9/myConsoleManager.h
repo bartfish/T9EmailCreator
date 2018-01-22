@@ -37,7 +37,7 @@ public:
 		topic_size = 6, // topic loader 
 		message_size = 15, // message loader
 		vocabulary_size = 10; // vocabulary loader
-		navigation_bar_informations = "Press: ESC - to quit, CTRL+S - to save, TAB - to go to the next field";
+		navigation_bar_informations = "Press: ESC - to quit,  TAB - to go to the next field, TAB(3 times) - to save";
 
 	}
 	~myConsoleManager() {};
@@ -45,6 +45,7 @@ public:
 	void generate_message_windows();
 	void draw_borders(WINDOW *screen);
 	void load_main_console(vector <WINDOW*> wins, vector<string> wins_titles);
+	void close_windows();
 
 	inline WINDOW * get_nav_window() { return nav_window; }
 	inline WINDOW * get_title_window() { return title_window; }

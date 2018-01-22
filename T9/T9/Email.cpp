@@ -1,6 +1,7 @@
 #include "Email.h"
 #include <string>
 
+
 bool Email::is_valid_recepient_info(const string &email)
 {
 	if (email.empty())
@@ -36,14 +37,22 @@ bool Email::is_valid_recepient_info(const string &email)
 		return true;
 	}
 }
-void Email::assign_recipient(const string &s)
+
+
+void Email::set_recipient(const string &s)
 {
 	recipient_info = s;
 }
-void Email::assign_message_content(const string &s)
+void Email::set_topic(const string &s)
+{
+	topic = s;
+}
+void Email::set_message_content(const string &s)
 {
 	message = s;
 }
+
+
 void Email::load_contacts()
 {
 	string s;
@@ -62,6 +71,8 @@ vector<string> Email::load_all_words_from_contacts(const string & s)
 {
 	return Emails.load_all_words(s);
 }
+
+
 void Email::create_message(myConsoleManager Con)
 {
 	// call console method get_windowtype() and assign windows to the ones from here
@@ -77,6 +88,9 @@ void Email::create_message(myConsoleManager Con)
 	string str = "";
 
 	char c;
+	
+	bool can_exit_while = false;
+
 	int cursor_position_x = 1;
 	int cursor_position_y = 1;
 	werase(contact_window);
@@ -84,6 +98,11 @@ void Email::create_message(myConsoleManager Con)
 
 	while (1)
 	{
+		if (can_exit_while)
+		{
+			break;
+		}
+
 		wrefresh(contact_window);
 		c = mvwgetch(contact_window, 1, 1);
 
@@ -149,7 +168,9 @@ void Email::create_message(myConsoleManager Con)
 			{
 				if (e)
 				{
-					break;
+					// assign inputted data to the message 
+					this->set_recipient(word);
+					can_exit_while = true;
 				}
 				else {
 					word = "";
@@ -180,15 +201,12 @@ void Email::create_message(myConsoleManager Con)
 			c = wgetch(title_window);
 			if (c == 'y')
 			{
-				// clear the screen for the navigation bar
-				//Con.clear_screen_from_message_windows();
-				//Con.generate_navigation_bar();
-
 				return;
 			}
 			else {
 				// backup default title window
 				Con.set_default_title_window();
+
 				// continue editing
 				continue;
 			}
@@ -199,12 +217,18 @@ void Email::create_message(myConsoleManager Con)
 	word = "";
 	text = "";
 	str = "";
+	can_exit_while = false;
 	cursor_position_x = 1;
 	werase(topic_window);
 	Con.draw_borders(topic_window);
 
 	while (1)
 	{
+		if (can_exit_while)
+		{
+			break;
+		}
+
 		wrefresh(topic_window);
 		c = mvwgetch(topic_window, 1, 1);
 		if (c == ' ')
@@ -257,13 +281,16 @@ void Email::create_message(myConsoleManager Con)
 
 		if (c == 9)
 		{
-			break;
+			// assign inputted data to the message 
+			(!empty(text)) ? this->set_topic(text) : this->set_topic(word);
+			can_exit_while = true;
 		}
 	}
 
 	word = "";
 	text = "";
 	str = "";
+	can_exit_while = false;
 	cursor_position_x = 1;
 	cursor_position_y = 1;
 	werase(message_window);
@@ -271,6 +298,11 @@ void Email::create_message(myConsoleManager Con)
 
 	while (1)
 	{
+		if (can_exit_while)
+		{
+			break;
+		}
+
 		wrefresh(message_window);
 		c = mvwgetch(message_window, 1, 1);
 
@@ -291,12 +323,6 @@ void Email::create_message(myConsoleManager Con)
 		}
 		else if (c == '\n')
 		{
-			// include new line into message field
-			cursor_position_y++;
-			text += c;
-			mvwprintw(message_window, cursor_position_y, 1, text.c_str());
-			cursor_position_x = text.length() + 2; // word end + space
-			wrefresh(message_window);
 			continue;
 		}
 		else if (c == 8)
@@ -334,15 +360,18 @@ void Email::create_message(myConsoleManager Con)
 
 		if (c == 9)
 		{
-			break;
+			(!empty(text)) ? this->set_message_content(text) : this->set_message_content(word);
+			can_exit_while = true;
 		}
 	}
-
-	delwin(contact_window);
-	delwin(topic_window);
-	delwin(message_window);
-	delwin(vocabulary_window);
-	delwin(error_window);
 }
+string Email::assign_message_content()
+{
+	Email *E = this;
+	string message_s;
+	message_s += "To: " + E->recipient_info + "\n";
+	message_s += "Topic: " + E->topic + "\n";
+	message_s += "Message: " + E->message + "\n";
 
-
+	return message_s;
+}
