@@ -3,6 +3,8 @@
 
 void myConsoleManager::generate_message_windows()
 {
+	system("cls");
+
 	initscr();
 	noecho();
 	curs_set(0); // get our maximum window dimensions 
@@ -93,6 +95,7 @@ void myConsoleManager::set_default_title_window()
 
 void myConsoleManager::clear_screen_from_message_windows()
 {
+	
 	werase(title_window);
 	werase(contact_window);
 	werase(topic_window);
@@ -106,19 +109,35 @@ void myConsoleManager::clear_screen_from_message_windows()
 	wrefresh(message_window);
 	wrefresh(vocabulary_window);
 	wrefresh(error_window);
+
+	// put cursor at the beginning of the window
+	system("cls");
+
 }
 
-void myConsoleManager::generate_navigation_bar()
+int myConsoleManager::generate_navigation_bar()
 {
 	initscr();
 	noecho();
 	curs_set(0); // get our maximum window dimensions 
 	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
 
-	clear_screen_from_message_windows();
-
+	myConsoleManager::clear_screen_from_message_windows();
+	
+	/*
 	nav_window = newwin(nav_size, parent_x, 0, 0);
 	mvwprintw(nav_window, 1, 1, "Navigation bar");
 	draw_borders(nav_window);
-	wrefresh(nav_window);
+	wrefresh(nav_window); */
+	cout << "/////// EMAIL & SMS CREATOR //////" << endl;
+	cout << "Choose: " << endl;
+	cout << "1 to create an email" << endl;
+	cout << "2 to create a SMS" << endl;
+
+	cout << endl << "Your choice: (enter number and the program will continue)";
+	char choice = _getch();
+
+	int c = (int) choice;
+	return c;
+	
 }

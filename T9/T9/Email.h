@@ -34,6 +34,6 @@ public:
 	void load_contacts();
 	vector<string> load_all_words_from_contacts(const string & s);
 	void create_message(myConsoleManager Con);
-	//void save_message(); // save to "Emails" folder
+	void save_message() {} // save to "Emails" folder
 
 };

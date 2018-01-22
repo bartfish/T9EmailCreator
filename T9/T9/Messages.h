@@ -27,7 +27,7 @@ public:
 		return Vocabulary.load_all_words("a");
 	}
 	virtual void create_message(myConsoleManager Con) {}
-	//virtual void save_message() {}
+	virtual void save_message() {}
 
 	void load_vocabulary(const string & filename);
 	vector<string> load_all_words_from_voc(const string & s);
