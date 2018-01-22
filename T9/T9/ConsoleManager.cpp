@@ -96,20 +96,6 @@ void myConsoleManager::set_default_title_window()
 void myConsoleManager::clear_screen_from_message_windows()
 {
 	
-	werase(title_window);
-	werase(contact_window);
-	werase(topic_window);
-	werase(message_window);
-	werase(vocabulary_window);
-	werase(error_window);
-
-	wrefresh(title_window);
-	wrefresh(contact_window);
-	wrefresh(topic_window);
-	wrefresh(message_window);
-	wrefresh(vocabulary_window);
-	wrefresh(error_window);
-
 	// put cursor at the beginning of the window
 	system("cls");
 
@@ -124,20 +110,24 @@ int myConsoleManager::generate_navigation_bar()
 
 	myConsoleManager::clear_screen_from_message_windows();
 	
-	/*
-	nav_window = newwin(nav_size, parent_x, 0, 0);
-	mvwprintw(nav_window, 1, 1, "Navigation bar");
-	draw_borders(nav_window);
-	wrefresh(nav_window); */
 	cout << "/////// EMAIL & SMS CREATOR //////" << endl;
 	cout << "Choose: " << endl;
 	cout << "1 to create an email" << endl;
 	cout << "2 to create a SMS" << endl;
 
 	cout << endl << "Your choice: (enter number and the program will continue)";
-	char choice = _getch();
+	int choice = _getch();
 
-	int c = (int) choice;
+	int c = choice;
 	return c;
-	
+}
+
+void myConsoleManager::close_windows()
+{
+	delwin(title_window);
+	delwin(contact_window);
+	delwin(topic_window);
+	delwin(message_window);
+	delwin(vocabulary_window);
+	delwin(error_window);
 }
