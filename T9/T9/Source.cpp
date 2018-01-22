@@ -6,33 +6,13 @@
 
 int main()
 {
+	// load menu
+	// defined windows needed for visual representation
+	myConsoleManager Cons;
 	while (1)
 	{
-		// load menu
-		cout << "/////// EMAIL & SMS CREATOR //////" << endl;
-		cout << "Choose: " << endl;
-		cout << "1 to create an email" << endl;
-		cout << "2 to create a SMS" << endl;
 
-		cout << endl << "Your choice: (enter number and the program will continue)";
-		char choice = _getch();
-
-		int c;
-		switch (choice)
-		{
-			case '1':
-				c = 1;
-				break;
-			case '2':
-				c = 2;
-				break;
-			case '0':
-				return 0;
-				break;
-		}
-
-		// defined windows needed for visual representation
-		myConsoleManager Cons;
+		int c = Cons.generate_navigation_bar();
 		Cons.generate_message_windows();
 
 		if (c == 1)

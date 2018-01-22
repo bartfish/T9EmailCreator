@@ -60,5 +60,5 @@ public:
 	void backspace_clicked(string &s, int cursor_position_x, WINDOW *the_window);
 	void set_default_title_window();
 	void clear_screen_from_message_windows();
-	void generate_navigation_bar();
+	int generate_navigation_bar();
 };

@@ -181,8 +181,8 @@ void Email::create_message(myConsoleManager Con)
 			if (c == 'y')
 			{
 				// clear the screen for the navigation bar
-				Con.clear_screen_from_message_windows();
-				Con.generate_navigation_bar();
+				//Con.clear_screen_from_message_windows();
+				//Con.generate_navigation_bar();
 
 				return;
 			}
