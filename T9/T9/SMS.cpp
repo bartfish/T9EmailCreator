@@ -1,6 +1,5 @@
 #include "SMS.h"
 
-
 void SMS::set_recipient(const string &s)
 {
 	recipient_info = s;
@@ -14,11 +13,11 @@ void SMS::set_message_content(const string &s)
 	message = s;
 }
 
-
 vector<string> SMS::load_all_words_from_contacts(const string & s)
 {
 	return Contacts.load_all_words(s);
 }
+
 void SMS::load_contacts()
 {
 	string s;
@@ -321,4 +320,16 @@ void SMS::create_message(myConsoleManager Con)
 	delwin(message_window);
 	delwin(vocabulary_window);
 	delwin(error_window);
+}
+
+string SMS::assign_message_content()
+{
+	SMS *S = this;
+	string message_s;
+	message_s = "EMAIL MESSAGE \n";
+	message_s += "To: " + S->recipient_info + "\n";
+	message_s += "Topic: " + S->topic + "\n";
+	message_s += "Message: " + S->message + "\n";
+
+	return message_s;
 }

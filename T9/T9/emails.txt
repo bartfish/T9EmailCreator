@@ -1,3 +1,3 @@
-bbryba@interia.pl
-bartlomiejryba97@gmail.com
-admin@bartryb.pl
+bbryba@example.com	
+bartlomiejryba@example.com
+admin@example.com

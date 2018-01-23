@@ -1,28 +1,24 @@
 #include "Trie.h"
 
-Trie::Trie(const string &val="") : value(val), flag(false){
-
-}
+Trie::Trie(const string &val="") : value(val), is_end_of_word(false) {}
 
 void Trie::add(char c) {
+
+	string s;
+	stringstream ss;
+	ss << c;
+	ss >> s;
+
 	if (value == "")
-		children[c] = Trie(string(1, c));
-	else
-		children[c] = Trie(value + c);
-}
-/*
-string Trie::findChar(const string &word) {
-	Trie * node = this;
-	for (int i = 0; i < word.length(); i++) {
-		const char c = word[i];
-		if (node->children.find(c) == node->children.end())
-			return "";
-		else
-			node = &node->children[c];
+	{
+		children[c] = Trie(s);
 	}
-	return node->value;
+	else
+	{
+		children[c] = Trie(value + c);
+	}
 }
-*/
+
 void Trie::insert(const string &word) {
 	Trie * node = this;
 	for (int i = 0; i < word.length(); i++) {
@@ -31,32 +27,32 @@ void Trie::insert(const string &word) {
 			node->add(c);
 		node = &node->children[c];
 	}
-	node->flag = true;
+	node->is_end_of_word = true;
 }
 
 vector<string> Trie::all_prefixes() {
-	vector<string> results;
-	if (flag)
-		results.push_back(value);
+	vector<string> words_list;
+	if (is_end_of_word)
+		words_list.push_back(value);
 
 	if (children.size()) {
 		map<char, Trie>::iterator iter;
 		vector<string>::iterator node;
 		for (iter = children.begin(); iter != children.end(); iter++) {
 			vector<string> nodes = iter->second.all_prefixes();
-			results.insert(results.end(), nodes.begin(), nodes.end());
+			words_list.insert(words_list.end(), nodes.begin(), nodes.end());
 		}
 	}
-	return results;
+	return words_list;
 }
 
 vector<string> Trie::load_all_words(const string &prefix) {
 	Trie * node = this;
-	vector<string> results;
+	vector<string> words_list;
 	for (int i = 0; i < prefix.length(); i++) {
 		const char c = prefix[i];
 		if (node->children.find(c) == node->children.end())
-			return results;
+			return words_list;
 		else
 			node = &node->children[c];
 	}

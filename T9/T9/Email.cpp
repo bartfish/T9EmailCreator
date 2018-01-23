@@ -88,7 +88,6 @@ void Email::create_message(myConsoleManager Con)
 	string str = "";
 
 	char c;
-	
 	bool can_exit_while = false;
 
 	int cursor_position_x = 1;
@@ -115,6 +114,10 @@ void Email::create_message(myConsoleManager Con)
 			else {
 				continue;
 			}
+		}
+		else if (c == '\n')
+		{
+			continue;
 		}
 		else if (c == 8)
 		{
@@ -210,7 +213,6 @@ void Email::create_message(myConsoleManager Con)
 				// continue editing
 				continue;
 			}
-			// go to main navigation
 		}
 	}
 
@@ -246,18 +248,29 @@ void Email::create_message(myConsoleManager Con)
 
 			continue;
 		}
-		else if (c == 8)
+		else if (c == '\n')
 		{
-			if (word.length() > 0)
+			continue;
+		}
+		else if (c != 8)
+		{
+			word += c;
+		}
+		else if (c == 8) // backspace implementaton for text
+		{
+			if (word.length() == 0)
 			{
-				Con.backspace_clicked(text, cursor_position_x, topic_window);
-			}
-			else {
 				word = "";
+				if (text.length() > 0)
+				{
+					Con.backspace_clicked(text, cursor_position_x, topic_window);
+				}
+			} 
+			else {
+				Con.backspace_clicked(word, cursor_position_x, topic_window);
 			}
 		}
 		else {
-			word += c;
 		}
 
 		mvwprintw(topic_window, 1, cursor_position_x, word.c_str());
@@ -284,6 +297,29 @@ void Email::create_message(myConsoleManager Con)
 			// assign inputted data to the message 
 			(!empty(text)) ? this->set_topic(text) : this->set_topic(word);
 			can_exit_while = true;
+		}
+
+
+		if (c == 27)
+		{
+			// ask if user is sure to exit
+			werase(title_window);
+			mvwprintw(title_window, 1, 1, "Press: y - to exit, n - to stay");
+			Con.draw_borders(title_window);
+			wrefresh(title_window);
+
+			c = wgetch(title_window);
+			if (c == 'y')
+			{
+				return;
+			}
+			else {
+				// backup default title window
+				Con.set_default_title_window();
+
+				// continue editing
+				continue;
+			}
 		}
 	}
 
@@ -329,7 +365,13 @@ void Email::create_message(myConsoleManager Con)
 		{
 			if (word.length() > 0)
 			{
-				Con.backspace_clicked(text, cursor_position_x, message_window);
+				if (text.length() != 0)
+				{
+					Con.backspace_clicked(text, cursor_position_x, message_window);
+				}
+				else {
+					Con.backspace_clicked(word, cursor_position_x, message_window);
+				}
 			}
 			else {
 				word = "";
@@ -363,12 +405,38 @@ void Email::create_message(myConsoleManager Con)
 			(!empty(text)) ? this->set_message_content(text) : this->set_message_content(word);
 			can_exit_while = true;
 		}
+
+
+		if (c == 27)
+		{
+			// ask if user is sure to exit
+			werase(title_window);
+			mvwprintw(title_window, 1, 1, "Press: y - to exit, n - to stay");
+			Con.draw_borders(title_window);
+			wrefresh(title_window);
+
+			c = wgetch(title_window);
+			if (c == 'y')
+			{
+				return;
+			}
+			else {
+				// backup default title window
+				Con.set_default_title_window();
+
+				// continue editing
+				continue;
+			}
+		}
 	}
 }
+
+
 string Email::assign_message_content()
 {
 	Email *E = this;
 	string message_s;
+	message_s = "EMAIL MESSAGE \n";
 	message_s += "To: " + E->recipient_info + "\n";
 	message_s += "Topic: " + E->topic + "\n";
 	message_s += "Message: " + E->message + "\n";

@@ -4,13 +4,13 @@ class Trie {
 public:
 	map<char, Trie> children;
 	string value;
-	bool flag;
+	bool is_end_of_word; // for loading words from trie (load when the bool is true)
 
 	Trie(const string &);
-	void add(char);
+	void add(char c);
 	//string find(const string &); // overloading classic function
-	void insert(const string &);
+	void insert(const string & word);
 
 	vector<string> all_prefixes();
-	vector<string> load_all_words(const string &);
+	vector<string> load_all_words(const string & s);
 };

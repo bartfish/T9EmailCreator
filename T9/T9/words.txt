@@ -1,6 +1,15 @@
 abcd
-aed
+apple
+border
+box
+bus
+car
+cheesburger
+clothes
+character
 for 
 fall
 follow
 Follow
+hamburger
+honey

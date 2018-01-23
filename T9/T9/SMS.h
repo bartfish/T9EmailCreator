@@ -28,7 +28,7 @@ public:
 	void set_topic(const string &s);
 	void set_message_content(const string &s);
 
-	string assign_message_content() { return ""; }
+	string assign_message_content();
 	vector<string> load_all_words_from_contacts(const string & s);
 	void create_message(myConsoleManager Con);
 };
