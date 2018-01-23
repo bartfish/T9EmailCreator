@@ -8,7 +8,6 @@ public:
 
 	Trie(const string &);
 	void add(char c);
-	//string find(const string &); // overloading classic function
 	void insert(const string & word);
 
 	vector<string> all_prefixes();
