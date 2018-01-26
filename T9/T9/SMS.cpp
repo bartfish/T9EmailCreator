@@ -67,7 +67,12 @@ void SMS::create_message(myConsoleManager Con)
 	int cursor_position_x = 1;
 	int cursor_position_y = 1;
 	werase(contact_window);
+
+	Con.draw_borders(title_window);
 	Con.draw_borders(contact_window);
+	Con.draw_borders(topic_window);
+	Con.draw_borders(vocabulary_window);
+	Con.draw_borders(error_window);
 
 	while (1)
 	{
@@ -115,7 +120,7 @@ void SMS::create_message(myConsoleManager Con)
 		{
 			// validate phone number inserted if is not found in the trie
 			// if not valid do not break, show validation message and clear window
-			bool is_valid_number = SMS::is_valid_recepient_info(word);
+			bool is_valid_number = !(SMS::is_valid_recepient_info(word)); // negate output to get true
 
 			try
 			{
@@ -315,13 +320,7 @@ void SMS::create_message(myConsoleManager Con)
 		}
 	}
 
-	delwin(contact_window);
-	delwin(topic_window);
-	delwin(message_window);
-	delwin(vocabulary_window);
-	delwin(error_window);
 }
-
 string SMS::assign_message_content()
 {
 	SMS *S = this;

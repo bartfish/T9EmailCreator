@@ -1,9 +1,9 @@
 #include "Messages.h"
 
-void Message::load_vocabulary(const string & file_name)
+void Message::load_vocabulary()
 {
 	string s;
-	ifstream words_file(file_name);
+	ifstream words_file("words.txt");
 
 	int n = 0;
 	transform(s.begin(), s.end(), s.begin(), ::tolower);

@@ -38,7 +38,6 @@ bool Email::is_valid_recepient_info(const string &email)
 	}
 }
 
-
 void Email::set_recipient(const string &s)
 {
 	recipient_info = s;
@@ -51,7 +50,6 @@ void Email::set_message_content(const string &s)
 {
 	message = s;
 }
-
 
 void Email::load_contacts()
 {
@@ -71,7 +69,6 @@ vector<string> Email::load_all_words_from_contacts(const string & s)
 {
 	return Emails.load_all_words(s);
 }
-
 
 void Email::create_message(myConsoleManager Con)
 {
@@ -226,22 +223,40 @@ void Email::create_message(myConsoleManager Con)
 
 	while (1)
 	{
+
+
+		c = mvwgetch(topic_window, 1, 1);
+
 		if (can_exit_while)
 		{
 			break;
 		}
 
-		wrefresh(topic_window);
-		c = mvwgetch(topic_window, 1, 1);
-		if (c == ' ')
+		if (text != "")
 		{
+			werase(topic_window);
+			Con.draw_borders(topic_window);
+
+			mvwprintw(topic_window, 1, 1, text.c_str());
+			cursor_position_x = text.length() + 2; // word end + space
+			wrefresh(topic_window);
+		}
+
+
+		if (c == ' ')
+		{/*
 			if (text != "")
 			{
 				text += " ";
 			}
 			text += word;
 			word = "";
+			*/
+			word = "";
+			text += " ";
 
+			werase(topic_window);
+			Con.draw_borders(topic_window);
 			mvwprintw(topic_window, 1, 1, text.c_str());
 			cursor_position_x = text.length() + 2; // word end + space
 			wrefresh(topic_window);
@@ -252,28 +267,74 @@ void Email::create_message(myConsoleManager Con)
 		{
 			continue;
 		}
-		else if (c != 8)
-		{
-			word += c;
-		}
 		else if (c == 8) // backspace implementaton for text
 		{
-			if (word.length() == 0)
+			if (word.length() == 1)
 			{
-				word = "";
-				if (text.length() > 0)
-				{
-					Con.backspace_clicked(text, cursor_position_x, topic_window);
-				}
-			} 
-			else {
-				Con.backspace_clicked(word, cursor_position_x, topic_window);
+				word.pop_back();
+				continue;
 			}
-		}
-		else {
-		}
+			if (text.length() > 0)
+			{
+				Con.backspace_clicked(text, cursor_position_x, topic_window);
 
-		mvwprintw(topic_window, 1, cursor_position_x, word.c_str());
+
+				if (text[text.length()-1] == ' ') // backspacing space
+				{
+					text.pop_back();
+					continue;
+				}
+
+				if (word.length() >= 1)
+				{
+					word.pop_back();
+				}
+
+				// take word without one element or the last word from text
+				string search_word = "";
+
+				if (word == "")
+				{
+					for (int i = 0; i<text.length(); ++i)
+					{
+						if (text[i] != ' ')
+						{
+							search_word += (char)text[i];
+						}
+						else {
+							break;
+						}
+					}
+				}
+				else {
+					search_word = word;
+				}
+			
+				str = "";
+				vector<string> r = this->load_all_words_from_voc(search_word);
+				for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
+				{
+					str += *it + ", ";
+				}
+
+				werase(vocabulary_window);
+				wrefresh(vocabulary_window);
+
+				Con.draw_borders(topic_window);
+				Con.draw_borders(vocabulary_window);
+
+				mvwprintw(vocabulary_window, 1, 1, str.c_str());
+				wrefresh(vocabulary_window);
+			}
+			continue;
+
+		}
+		word += c;
+		text += c;
+
+		werase(topic_window);
+		Con.draw_borders(topic_window);
+		mvwprintw(topic_window, 1, 1, text.c_str());
 		wrefresh(topic_window);
 
 		str = "";
@@ -298,7 +359,6 @@ void Email::create_message(myConsoleManager Con)
 			(!empty(text)) ? this->set_topic(text) : this->set_topic(word);
 			can_exit_while = true;
 		}
-
 
 		if (c == 27)
 		{
@@ -406,7 +466,6 @@ void Email::create_message(myConsoleManager Con)
 			can_exit_while = true;
 		}
 
-
 		if (c == 27)
 		{
 			// ask if user is sure to exit
@@ -430,7 +489,6 @@ void Email::create_message(myConsoleManager Con)
 		}
 	}
 }
-
 
 string Email::assign_message_content()
 {

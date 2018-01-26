@@ -9,7 +9,7 @@ class Email : public Message
 		string invalid_email_message;
 		unsigned int priority_type;
 		enum Priority : unsigned int
-		{
+		{  
 			HIGH = 1,
 			NORMAL = 2,
 			LOW = 3

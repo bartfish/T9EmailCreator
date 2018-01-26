@@ -39,6 +39,18 @@ public:
 		vocabulary_size = 10; // vocabulary loader
 		navigation_bar_informations = "Press: ESC - to quit,  TAB - to go to the next field, TAB(3 times) - to save";
 
+		initscr();
+		noecho();
+		curs_set(0); // get our maximum window dimensions 
+		getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
+
+		title_window = newwin(title_size, parent_x, 0, 0);
+		contact_window = newwin(contact_size, parent_x, title_size, 0);
+		topic_window = newwin(topic_size, parent_x, contact_size + title_size, 0); // draw to our windows 
+		message_window = newwin(message_size, parent_x, contact_size + topic_size + title_size, 0); // draw to our windows 
+		vocabulary_window = newwin(vocabulary_size, parent_x, contact_size + topic_size + message_size + title_size, 0); // draw to our windows 
+		error_window = newwin(error_size, parent_x, contact_size + topic_size + message_size + title_size + vocabulary_size, 0); // draw to our windows 
+
 	}
 	~myConsoleManager() {};
 
@@ -60,6 +72,5 @@ public:
 
 	void backspace_clicked(string &s, int cursor_position_x, WINDOW *the_window);
 	void set_default_title_window();
-	void clear_screen_from_message_windows();
 	int generate_navigation_bar();
 };

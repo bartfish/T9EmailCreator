@@ -31,7 +31,7 @@ public:
 	}
 	virtual void create_message(myConsoleManager Con) {}
 
-	void load_vocabulary(const string & filename);
+	void load_vocabulary();
 	vector<string> load_all_words_from_voc(const string & s);
 
 	// helper functions created for the purpose of validating email address
@@ -78,12 +78,7 @@ public:
 		system("pause");
 		
 	}
-
-
-
 };
-
-
 
 
 class my_exception : public exception

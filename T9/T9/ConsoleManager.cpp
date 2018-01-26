@@ -5,26 +5,12 @@ void myConsoleManager::generate_message_windows()
 {
 	system("cls");
 
-	initscr();
-	noecho();
-	curs_set(0); // get our maximum window dimensions 
-	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
-	
-	title_window = newwin(title_size, parent_x, 0, 0);
-	contact_window = newwin(contact_size, parent_x, title_size, 0);
-	topic_window = newwin(topic_size, parent_x, contact_size + title_size, 0); // draw to our windows 
-	message_window = newwin(message_size, parent_x, contact_size + topic_size + title_size, 0); // draw to our windows 
-	vocabulary_window = newwin(vocabulary_size, parent_x, contact_size + topic_size + message_size + title_size, 0); // draw to our windows 
-	error_window = newwin(error_size, parent_x, contact_size + topic_size + message_size + title_size + vocabulary_size, 0); // draw to our windows 
-	
 	// number of windows must be equal to number of titles
 	vector<WINDOW*> wins = { title_window, contact_window, topic_window, message_window, vocabulary_window, error_window };
 	vector<string> wins_titles = { navigation_bar_informations, "Contact", "Topic", "Message", "Vocabulary", "Error window for valdation messages" };
 	myConsoleManager::load_main_console(wins, wins_titles);
 
 }
-
-
 void myConsoleManager::draw_borders(WINDOW *screen)
 {
 
@@ -45,20 +31,12 @@ void myConsoleManager::draw_borders(WINDOW *screen)
 		mvwprintw(screen, y - 1, i, "-");
 	}
 }
-
 void myConsoleManager::load_main_console(vector <WINDOW*> wins, vector<string> wins_titles)
 {
 
 	// draw borders		
 	vector<string>::iterator it = wins_titles.begin();
 	vector<WINDOW*>::iterator itw = wins.begin();
-	while (itw != wins.end())
-	{
-		draw_borders(*itw);
-		itw++;
-	}
-
-	itw = wins.begin();
 	while (it != wins_titles.end())
 	{
 		mvwprintw(*itw, 1, 1, (*it).c_str());
@@ -69,21 +47,28 @@ void myConsoleManager::load_main_console(vector <WINDOW*> wins, vector<string> w
 	itw = wins.begin();
 	while (itw != wins.end())
 	{
+		draw_borders(*itw);
+		itw++;
+	}
+
+
+	itw = wins.begin();
+	while (itw != wins.end())
+	{
 		wrefresh(*itw);
 		itw++;
 	}
 
 }
-
 void myConsoleManager::backspace_clicked(string &s, int cursor_position_x, WINDOW *the_window)
 {
 	s.pop_back();
+	string a = s;
 	werase(the_window);
-	mvwprintw(the_window, 1, cursor_position_x - 1, s.c_str());
+	mvwprintw(the_window, 1, 1, s.c_str());
 	wrefresh(the_window);
 	myConsoleManager::draw_borders(the_window);
 }
-
 void myConsoleManager::set_default_title_window()
 {
 	werase(title_window);
@@ -92,13 +77,14 @@ void myConsoleManager::set_default_title_window()
 	wrefresh(title_window);
 
 }
-
-void myConsoleManager::clear_screen_from_message_windows()
+void myConsoleManager::close_windows()
 {
-	
-	// put cursor at the beginning of the window
-	system("cls");
-
+	delwin(title_window);
+	delwin(contact_window);
+	delwin(topic_window);
+	delwin(message_window);
+	delwin(vocabulary_window);
+	delwin(error_window);
 }
 
 int myConsoleManager::generate_navigation_bar()
@@ -108,7 +94,7 @@ int myConsoleManager::generate_navigation_bar()
 	curs_set(0); // get our maximum window dimensions 
 	getmaxyx(stdscr, parent_y, parent_x); // set up initial windows 
 
-	myConsoleManager::clear_screen_from_message_windows();
+	system("cls");
 	
 	cout << "/////// EMAIL & SMS CREATOR //////" << endl;
 	cout << "Choose: " << endl;
@@ -122,12 +108,3 @@ int myConsoleManager::generate_navigation_bar()
 	return c;
 }
 
-void myConsoleManager::close_windows()
-{
-	delwin(title_window);
-	delwin(contact_window);
-	delwin(topic_window);
-	delwin(message_window);
-	delwin(vocabulary_window);
-	delwin(error_window);
-}
