@@ -6,39 +6,33 @@
 
 int main()
 {
-	// load menu
-	// defined windows needed for visual representation
+
 	Message *M = nullptr;
 	myConsoleManager Cons;
+	int c;
 
-	while (1)
+	c = Cons.generate_navigation_bar();
+	Cons.generate_message_windows();
+
+	if (c == 49)
 	{
+		Email E;
+		E.load_vocabulary();
+		E.load_contacts();
+		E.create_message(Cons);
+		M->save_message(E);
 
-		int c = Cons.generate_navigation_bar();
-		Cons.generate_message_windows();
+	} else if (c == 50) {
 
-		if (c == 49)
-		{
-			Email E;
-			E.load_vocabulary("words.txt");
-			E.load_contacts();
-			E.create_message(Cons);
-			M->save_message(E);
+		SMS S;
+		S.load_vocabulary();
+		S.load_contacts();
+		S.create_message(Cons);
+		M->save_message(S);
 
-		} else if (c == 50) {
-
-			SMS S;
-			S.load_vocabulary("words.txt");
-			S.load_contacts();
-			S.create_message(Cons);
-			M->save_message(S);
-
-		}
-		else if (c == 48)
-		{
-			break;
-		}
 	}
+
+	cout << "Press enter to exit the program" << endl;
 	
 	Cons.close_windows();
 	endwin();
