@@ -10,6 +10,7 @@ int main()
 	Message *M = nullptr;
 	myConsoleManager Cons;
 	int c;
+	bool is_trie_loaded;
 
 	c = Cons.generate_navigation_bar();
 	Cons.generate_message_windows();
@@ -18,17 +19,23 @@ int main()
 	{
 		Email E;
 		E.load_vocabulary();
-		E.load_contacts();
-		E.create_message(Cons);
-		M->save_message(E);
+		is_trie_loaded = E.load_contacts();
+		if (is_trie_loaded)
+		{
+			E.create_message(Cons);
+			M->save_message(E);
+		} 
 
 	} else if (c == 50) {
 
 		SMS S;
 		S.load_vocabulary();
-		S.load_contacts();
-		S.create_message(Cons);
-		M->save_message(S);
+		is_trie_loaded = S.load_contacts();
+		if (is_trie_loaded)
+		{
+			S.create_message(Cons);
+			M->save_message(S);
+		}
 
 	}
 

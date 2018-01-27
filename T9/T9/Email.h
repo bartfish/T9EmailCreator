@@ -33,7 +33,7 @@ class Email : public Message
 		string assign_message_content();
 
 		void inputting_contact_info() {};
-		void load_contacts();
+		bool load_contacts();
 		vector<string> load_all_words_from_contacts(const string & s);
 		void create_message(myConsoleManager Con);
 

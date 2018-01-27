@@ -108,3 +108,40 @@ int myConsoleManager::generate_navigation_bar()
 	return c;
 }
 
+void myConsoleManager::reset_message_vars(string & word, string &text, string &str, bool &can_exit_while, 
+	int &cursor_position_x, 
+	int &cursor_position_y)
+{
+	word = "";
+	text = "";
+	str = "";
+	can_exit_while = false;
+	cursor_position_x = 1;
+}
+
+void myConsoleManager::update_window_content(WINDOW * u_vocabulary_window, const string &str, int x, int y)
+{
+	werase(u_vocabulary_window);
+	wrefresh(u_vocabulary_window);
+
+	draw_borders(u_vocabulary_window);
+
+	mvwprintw(u_vocabulary_window, x, y, str.c_str());
+	wrefresh(u_vocabulary_window);
+
+}
+void myConsoleManager::clean_window_content(WINDOW * u_window)
+{
+	werase(u_window);
+	myConsoleManager::draw_borders(u_window);
+	wrefresh(u_window);
+}
+string myConsoleManager::load_vocabulary_content(vector<string> words_arr)
+{
+	string words = "";
+	for (vector<string>::iterator it = words_arr.begin(); it != words_arr.end(); it++)
+	{
+		words += *it + ", ";
+	}
+	return words;
+}

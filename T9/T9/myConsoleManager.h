@@ -59,6 +59,11 @@ public:
 	void load_main_console(vector <WINDOW*> wins, vector<string> wins_titles);
 	void close_windows();
 
+	void update_window_content(WINDOW * u_vocabulary_window, const string & str, int x = 1,	int y = 1);
+	void clean_window_content(WINDOW * u_window);
+	void reset_message_vars(string & word, string &text, string &str, bool &can_exit_while, int &cursor_position_x, int &cursor_position_y);
+	string load_vocabulary_content(vector<string> words_arr);
+
 	inline WINDOW * get_nav_window() { return nav_window; }
 	inline WINDOW * get_title_window() { return title_window; }
 	inline WINDOW * get_contact_window() { return contact_window; }

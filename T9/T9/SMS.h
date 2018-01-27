@@ -22,7 +22,7 @@ public:
 	~SMS() {}
 
 	bool is_valid_recepient_info(const string &s);
-	void load_contacts();
+	bool load_contacts();
 
 	void set_recipient(const string &s);
 	void set_topic(const string &s);

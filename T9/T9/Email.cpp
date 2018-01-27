@@ -1,7 +1,7 @@
 #include "Email.h"
 #include <string>
 
-
+// Email validation
 bool Email::is_valid_recepient_info(const string &email)
 {
 	if (email.empty())
@@ -38,6 +38,7 @@ bool Email::is_valid_recepient_info(const string &email)
 	}
 }
 
+// Setters 
 void Email::set_recipient(const string &s)
 {
 	recipient_info = s;
@@ -50,26 +51,59 @@ void Email::set_message_content(const string &s)
 {
 	message = s;
 }
-
-void Email::load_contacts()
+string Email::assign_message_content()
 {
-	string s;
-	ifstream words_file("emails.txt");
+	Email *E = this;
+	string message_s;
+	message_s = "EMAIL MESSAGE \n";
+	message_s += "To: " + E->recipient_info + "\n";
+	message_s += "Topic: " + E->topic + "\n";
+	message_s += "Message: " + E->message + "\n";
 
-	int n = 0;
-	transform(s.begin(), s.end(), s.begin(), ::tolower);
-	while (getline(words_file, s))
-	{
-		n++;
-		Emails.insert(s);
-		transform(s.begin(), s.end(), s.begin(), ::tolower);
+	return message_s;
+}
+bool Email::load_contacts()
+{
+	string s, filename = "emails.txt";
+	ifstream words_file(filename);
+
+	try {
+		if (!words_file.good())
+		{
+			throw false;
+		}
+		throw true;
 	}
+	catch (bool e)
+	{
+		if (!e)
+		{
+			system("cls");
+			cout << "Application was not able to open " << filename << endl;
+			system("pause");
+			return e;
+		}
+		else {
+
+			int n = 0;
+			transform(s.begin(), s.end(), s.begin(), ::tolower);
+			while (getline(words_file, s))
+			{
+				n++;
+				Emails.insert(s);
+				transform(s.begin(), s.end(), s.begin(), ::tolower);
+			}
+
+			return e;
+		}
+
+	}
+
 }
 vector<string> Email::load_all_words_from_contacts(const string & s)
 {
 	return Emails.load_all_words(s);
 }
-
 void Email::create_message(myConsoleManager Con)
 {
 	// call console method get_windowtype() and assign windows to the ones from here
@@ -80,18 +114,19 @@ void Email::create_message(myConsoleManager Con)
 	WINDOW *vocabulary_window = Con.get_vocabulary_window();
 	WINDOW *error_window = Con.get_error_window();
 
+	// set necesary vars for creating messages
+	char c;
+
 	string word = "";
 	string text = "";
 	string str = "";
 
-	char c;
 	bool can_exit_while = false;
 
 	int cursor_position_x = 1;
 	int cursor_position_y = 1;
-	werase(contact_window);
-	Con.draw_borders(contact_window);
 
+	Con.clean_window_content(contact_window);
 	while (1)
 	{
 		if (can_exit_while)
@@ -126,30 +161,7 @@ void Email::create_message(myConsoleManager Con)
 				word = "";
 			}
 		}
-		else {
-			word += c;
-		}
-
-		mvwprintw(contact_window, 1, cursor_position_x, word.c_str());
-		wrefresh(contact_window);
-
-		str = "";
-		vector<string> r = this->load_all_words_from_contacts(word);
-		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
-		{
-			str += *it + ", ";
-		}
-
-		werase(vocabulary_window);
-		wrefresh(vocabulary_window);
-
-		Con.draw_borders(contact_window);
-		Con.draw_borders(vocabulary_window); 
-
-		mvwprintw(vocabulary_window, 1, 1, str.c_str());
-		wrefresh(vocabulary_window);
-
-		if (c == 9)
+		else if (c == 9)
 		{
 			// validate email inserted if is not found in the trie
 			// if not valid do not break, show validation message and clear window
@@ -187,17 +199,16 @@ void Email::create_message(myConsoleManager Con)
 					continue;
 				}
 			}
-			
-		}
 
-		if (c == 27)
+		}
+		else if (c == 27)
 		{
 			// ask if user is sure to exit
 			werase(title_window);
 			mvwprintw(title_window, 1, 1, "Press: y - to exit, n - to stay");
 			Con.draw_borders(title_window);
 			wrefresh(title_window);
-			
+
 			c = wgetch(title_window);
 			if (c == 'y')
 			{
@@ -211,27 +222,29 @@ void Email::create_message(myConsoleManager Con)
 				continue;
 			}
 		}
+		else {
+			word += c;
+		}
+
+		Con.update_window_content(contact_window, word, 1, cursor_position_x);
+		vector<string> r = this->load_all_words_from_contacts(word);
+		str = Con.load_vocabulary_content(r);
+		Con.update_window_content(vocabulary_window, str, 1, 1);
+
 	}
 
-	word = "";
-	text = "";
-	str = "";
-	can_exit_while = false;
-	cursor_position_x = 1;
-	werase(topic_window);
-	Con.draw_borders(topic_window);
-
+	Con.reset_message_vars(word, text, str, can_exit_while, cursor_position_x, cursor_position_y);
+	Con.clean_window_content(topic_window);
 	while (1)
 	{
 
-
+		wrefresh(topic_window);
 		c = mvwgetch(topic_window, 1, 1);
 
 		if (can_exit_while)
 		{
 			break;
 		}
-
 		if (text != "")
 		{
 			werase(topic_window);
@@ -241,7 +254,6 @@ void Email::create_message(myConsoleManager Con)
 			cursor_position_x = text.length() + 2; // word end + space
 			wrefresh(topic_window);
 		}
-
 
 		if (c == ' ')
 		{/*
@@ -310,57 +322,21 @@ void Email::create_message(myConsoleManager Con)
 					search_word = word;
 				}
 			
-				str = "";
 				vector<string> r = this->load_all_words_from_voc(search_word);
-				for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
-				{
-					str += *it + ", ";
-				}
-
-				werase(vocabulary_window);
-				wrefresh(vocabulary_window);
-
+				str = Con.load_vocabulary_content(r);
+				Con.update_window_content(vocabulary_window, str, 1, 1);
 				Con.draw_borders(topic_window);
-				Con.draw_borders(vocabulary_window);
-
-				mvwprintw(vocabulary_window, 1, 1, str.c_str());
-				wrefresh(vocabulary_window);
 			}
 			continue;
 
 		}
-		word += c;
-		text += c;
-
-		werase(topic_window);
-		Con.draw_borders(topic_window);
-		mvwprintw(topic_window, 1, 1, text.c_str());
-		wrefresh(topic_window);
-
-		str = "";
-		vector<string> r = this->load_all_words_from_voc(word);
-		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
-		{
-			str += *it + ", ";
-		}
-
-		werase(vocabulary_window);
-		wrefresh(vocabulary_window);
-
-		Con.draw_borders(topic_window);
-		Con.draw_borders(vocabulary_window);
-
-		mvwprintw(vocabulary_window, 1, 1, str.c_str());
-		wrefresh(vocabulary_window);
-
-		if (c == 9)
+		else if (c == 9)
 		{
 			// assign inputted data to the message 
 			(!empty(text)) ? this->set_topic(text) : this->set_topic(word);
 			can_exit_while = true;
 		}
-
-		if (c == 27)
+		else if (c == 27)
 		{
 			// ask if user is sure to exit
 			werase(title_window);
@@ -381,36 +357,45 @@ void Email::create_message(myConsoleManager Con)
 				continue;
 			}
 		}
+		word += c;
+		text += c;
+
+		Con.update_window_content(topic_window, text, 1, 1);
+		vector<string> r = this->load_all_words_from_voc(word);
+		str = Con.load_vocabulary_content(r);
+		Con.update_window_content(vocabulary_window, str, 1, 1);
 	}
 
-	word = "";
-	text = "";
-	str = "";
-	can_exit_while = false;
-	cursor_position_x = 1;
-	cursor_position_y = 1;
-	werase(message_window);
-	Con.draw_borders(message_window);
 
+	Con.reset_message_vars(word, text, str, can_exit_while, cursor_position_x, cursor_position_y);
+	Con.clean_window_content(message_window);
 	while (1)
 	{
-		if (can_exit_while)
-		{
-			break;
-		}
 
 		wrefresh(message_window);
 		c = mvwgetch(message_window, 1, 1);
 
+		if (can_exit_while)
+		{
+			break;
+		}
+		if (text != "")
+		{
+			werase(message_window);
+			Con.draw_borders(message_window);
+
+			mvwprintw(message_window, 1, 1, text.c_str());
+			cursor_position_x = text.length() + 2; // word end + space
+			wrefresh(message_window);
+		}
 		if (c == ' ')
 		{
-			if (text != "")
-			{
-				text += " ";
-			}
-			text += word;
+			
 			word = "";
+			text += " ";
 
+			werase(message_window);
+			Con.draw_borders(message_window);
 			mvwprintw(message_window, 1, 1, text.c_str());
 			cursor_position_x = text.length() + 2; // word end + space
 			wrefresh(message_window);
@@ -423,50 +408,59 @@ void Email::create_message(myConsoleManager Con)
 		}
 		else if (c == 8)
 		{
-			if (word.length() > 0)
+			if (word.length() == 1)
 			{
-				if (text.length() != 0)
+				word.pop_back();
+				continue;
+			}
+			if (text.length() > 0)
+			{
+				Con.backspace_clicked(text, cursor_position_x, message_window);
+
+				if (text[text.length() - 1] == ' ') // backspacing space
 				{
-					Con.backspace_clicked(text, cursor_position_x, message_window);
+					text.pop_back();
+					continue;
+				}
+
+				if (word.length() >= 1)
+				{
+					word.pop_back();
+				}
+
+				// take word without one element or the last word from text
+				string search_word = "";
+
+				if (word == "")
+				{
+					for (int i = 0; i<text.length(); ++i)
+					{
+						if (text[i] != ' ')
+						{
+							search_word += (char)text[i];
+						}
+						else {
+							break;
+						}
+					}
 				}
 				else {
-					Con.backspace_clicked(word, cursor_position_x, message_window);
+					search_word = word;
 				}
+
+				vector<string> r = this->load_all_words_from_voc(search_word);
+				str = Con.load_vocabulary_content(r);
+				Con.update_window_content(vocabulary_window, str, 1, 1);
+				Con.draw_borders(message_window);
 			}
-			else {
-				word = "";
-			}
+			continue;
 		}
-		else {
-			word += c;
-		}
-
-		mvwprintw(message_window, 1, cursor_position_x, word.c_str());
-		wrefresh(message_window);
-
-		str = "";
-		vector<string> r = this->load_all_words_from_voc(word);
-		for (vector<string>::iterator it = r.begin(); it != r.end(); it++)
-		{
-			str += *it + ", ";
-		}
-
-		werase(vocabulary_window);
-		wrefresh(vocabulary_window);
-
-		Con.draw_borders(message_window);
-		Con.draw_borders(vocabulary_window); 
-
-		mvwprintw(vocabulary_window, 1, 1, str.c_str());
-		wrefresh(vocabulary_window);
-
-		if (c == 9)
+		else if (c == 9)
 		{
 			(!empty(text)) ? this->set_message_content(text) : this->set_message_content(word);
 			can_exit_while = true;
 		}
-
-		if (c == 27)
+		else if (c == 27)
 		{
 			// ask if user is sure to exit
 			werase(title_window);
@@ -487,17 +481,14 @@ void Email::create_message(myConsoleManager Con)
 				continue;
 			}
 		}
+		word += c;
+		text += c;
+
+		Con.update_window_content(message_window, text, 1, 1);
+		vector<string> r = this->load_all_words_from_voc(word);
+		str = Con.load_vocabulary_content(r);
+		Con.update_window_content(vocabulary_window, str, 1, 1);
+
+
 	}
-}
-
-string Email::assign_message_content()
-{
-	Email *E = this;
-	string message_s;
-	message_s = "EMAIL MESSAGE \n";
-	message_s += "To: " + E->recipient_info + "\n";
-	message_s += "Topic: " + E->topic + "\n";
-	message_s += "Message: " + E->message + "\n";
-
-	return message_s;
 }
